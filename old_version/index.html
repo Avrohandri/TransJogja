@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Trans Jogja - Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#00342b",
+                        "secondary": "#006c49",
+                        "tertiary": "#0d3326",
+                        "surface": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "on-surface-variant": "#3f4945",
+                        "primary-container": "#004d40",
+                        "primary-fixed-dim": "#94d3c1",
+                        "secondary-container": "#6cf8bb",
+                        "on-secondary-container": "#00714d",
+                        "error": "#ba1a1a",
+                        "secondary-fixed": "#6ffbbe",
+                        "tertiary-fixed-dim": "#a8cfbc",
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "container-max-width": "1440px",
+                        "unit": "6px",
+                        "margin": "16px",
+                        "card-padding": "16px"
+                    },
+                    "fontFamily": {
+                        "title-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 3s ease-in-out forwards;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[#f4f7f6] text-on-surface font-body-md antialiased min-h-screen">
+    <!-- Top Navbar -->
+    <header class="bg-white rounded-xl px-6 py-3 shadow-sm mb-margin flex items-center justify-between">
+        <!-- Left Side: User Profile (Admin) -->
+        <div class="flex items-center gap-3 py-1">
+            <div class="relative w-9 h-9">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop"
+                    alt="Avatar" class="w-full h-full rounded-full object-cover border border-surface-variant" />
+                <span
+                    class="absolute bottom-0 right-0 w-3 h-3 bg-secondary rounded-full border-2 border-surface-container-lowest"></span>
+            </div>
+            <div class="flex flex-col">
+                <span class="text-body-md font-bold text-on-surface">David Greymaax</span>
+                <span class="text-[10px] text-on-surface-variant font-medium">Administrator</span>
+            </div>
+        </div>
+
+        <!-- Right Side: Notifications & Sign out only -->
+        <div class="flex items-center gap-2">
+            <!-- Notifications -->
+            <button
+                class="material-symbols-outlined text-on-surface-variant hover:text-primary hover:bg-surface-container-low p-2 rounded-full transition-colors relative text-xl"
+                title="Notifikasi">
+                notifications
+                <span
+                    class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border border-surface-container-lowest animate-pulse"></span>
+            </button>
+
+            <!-- Sign out -->
+            <button onclick="window.logout()"
+                class="material-symbols-outlined text-on-surface-variant hover:text-error hover:bg-surface-container-low p-2 rounded-full transition-colors text-xl"
+                title="Sign out">
+                power_settings_new
+            </button>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+        <!-- Left Column -->
+        <div class="lg:col-span-5 flex flex-col gap-gutter justify-between">
+            <!-- Data Transaksi Live -->
+            <div class="bg-white rounded-xl p-card-padding shadow-sm">
+                <div class="mb-unit*2">
+                    <h2 class="text-title-lg font-title-lg text-primary">Data Input</h2>
+                    <p class="text-body-md font-body-md text-on-surface-variant">Data input harian penumpang masuk bus
+                    </p>
+                </div>
+                <div class="flex flex-col gap-unit" id="liveTransactionsContainer">
+                    <p class="text-sm text-center text-on-surface-variant py-4">Memuat data transaksi...</p>
+                </div>
+                <button onclick="openTransactionsModal()"
+                    class="w-full mt-unit*3 py-2 px-4 border border-secondary text-secondary font-label-md text-label-md rounded-lg hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                    Lihat Semua Input
+                    <span class="material-symbols-outlined" style="font-size: 16px;">arrow_forward</span>
+                </button>
+            </div>
+
+            <!-- Data Demand Terakhir -->
+            <div class="bg-white rounded-xl p-card-padding shadow-sm flex-grow">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <h2 class="text-title-lg font-title-lg text-primary">Data Demand Terakhir</h2>
+                        <input type="month" id="displayBulan" value="2026-05" onchange="updateDisplayMonth()"
+                            class="mt-1 bg-surface-container-lowest text-on-surface text-[12px] font-semibold rounded-md border border-surface-variant hover:bg-surface-container-low transition-colors px-2 py-1 outline-none focus:border-primary cursor-pointer w-32" />
+                    </div>
+                    <button onclick="openInputModal()"
+                        class="flex items-center gap-1 px-3 py-1.5 bg-primary text-white text-[11px] font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-sm">
+                        <span class="material-symbols-outlined" style="font-size:15px;">edit_note</span>
+                        Input Manual
+                    </button>
+                </div>
+                <!-- Dynamic Chart Area with Tooltip -->
+                <div class="relative border-b border-l border-surface-variant mt-2 group cursor-crosshair"
+                    style="height:150px; overflow:visible;" id="chartContainer">
+                    <svg id="demandChart" class="w-full h-full overflow-visible" preserveAspectRatio="none"
+                        viewBox="0 0 700 120">
+                        <defs>
+                            <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00342b" stop-opacity="0.15" />
+                                <stop offset="100%" stop-color="#00342b" stop-opacity="0" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Dynamic content injected via JS -->
+                        <path id="chartArea" fill="url(#chartGrad)" />
+                        <path id="chartLine" fill="none" stroke="#00342b" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2.5" />
+                        <g id="chartPoints"></g>
+                    </svg>
+
+                    <!-- Hover Tooltip -->
+                    <div id="chartTooltip" class="absolute hidden flex-col items-center pointer-events-none z-10"
+                        style="top:0; left:0; transform: translate(-50%, -100%); margin-top: -8px;">
+                        <div
+                            class="bg-[#2a2e33] text-white px-3 py-1.5 rounded shadow-lg flex flex-col items-center gap-0.5 whitespace-nowrap">
+                            <span id="tooltipValue" class="font-bold text-[13px]">0</span>
+                            <span id="tooltipLabel" class="text-gray-300 text-[10px]">Halte</span>
+                        </div>
+                        <div class="w-2 h-2 bg-[#2a2e33] transform rotate-45 -mt-1"></div>
+                    </div>
+
+                    <!-- Hover Vertical Line -->
+                    <div id="hoverLine"
+                        class="absolute top-0 bottom-0 border-l border-dashed border-gray-400 hidden pointer-events-none">
+                    </div>
+                </div>
+                <!-- Summary Footer -->
+                <div class="grid grid-cols-3 gap-2 mt-2">
+                    <div class="bg-surface-container-low p-2 rounded-lg border border-surface-variant">
+                        <p class="text-[10px] font-bold text-on-surface-variant mb-1">Total Penumpang</p>
+                        <p class="text-title-lg font-bold text-primary" id="statTotal">3.420</p>
+                    </div>
+                    <div class="bg-surface-container-low p-2 rounded-lg border border-surface-variant">
+                        <p class="text-[10px] font-bold text-on-surface-variant mb-1">Halte Teramai</p>
+                        <p class="text-body-md font-bold text-primary truncate" id="statTeramai">Bandara Adi...</p>
+                    </div>
+                    <div class="bg-surface-container-low p-2 rounded-lg border border-surface-variant">
+                        <p class="text-[10px] font-bold text-on-surface-variant mb-1">Kenaikan Demand</p>
+                        <p class="text-title-lg font-bold text-secondary">+15%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="lg:col-span-7" style="height: fit-content;">
+            <!-- Peta Rute -->
+            <div class="bg-white rounded-xl p-card-padding shadow-sm flex flex-col relative overflow-hidden">
+                <div
+                    class="mb-unit*2 z-10 relative bg-surface-container-lowest bg-opacity-90 p-2 rounded-lg inline-block backdrop-blur-sm w-max">
+                    <h2 class="text-title-lg font-title-lg text-primary">Peta Rute</h2>
+                    <p class="text-body-md font-body-md text-on-surface-variant">Visualisasi rute Trans Jogja
+                        berdasarkan halte aktif</p>
+                </div>
+                <!-- Map Area (Stylized Placeholder) -->
+                <div class="rounded-lg overflow-hidden relative bg-[#e0e3e5]" style="height: 530px;">
+                    <!-- Using an image to represent the map -->
+                    <img alt="Map" class="w-full h-full object-cover opacity-50 mix-blend-multiply"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcNyFyEee-Cxo0Ycf5uMEZ3J1TGcb_gEMZd3_CFua3z1lbKFk26P3PW8cL2Lu7X8kkIyKPuEVhfC5qtyWiEVJPiWaTR7L8Z_2D0VgFnAKWctJhJ-BfVxbn0UmrwFWJvSOEztQLCCN8iFpGVgU_G6rRJSUs4F5TqgLAuV4JTpTIaZoEEYIUdWCNS0eljE1UCgV-93J3WLMSaG0j8qU8sFB-xEDr61aIgD9rmORBxfq1wk7wEyKjkFpQbYfvGd-xICMxzW9zQw35pSy0" />
+
+                    <!-- Route Line SVG Overlay -->
+                    <svg class="absolute top-0 left-0 w-full h-full z-10 pointer-events-none" preserveAspectRatio="none"
+                        viewBox="0 0 100 100">
+                        <path d="M 20 80 Q 40 40, 60 50 T 80 20" fill="none" stroke="#004d40" stroke-linecap="round"
+                            stroke-width="1.5"></path>
+                    </svg>
+
+                    <!-- Markers -->
+                    <div
+                        class="absolute top-[20%] left-[80%] transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group">
+                        <div class="w-4 h-4 bg-error rounded-full border-2 border-white shadow-md"></div>
+                        <span
+                            class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-surface-container-lowest px-2 py-1 rounded text-label-md text-on-surface shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Terminal
+                            Pakem</span>
+                    </div>
+                    <div
+                        class="absolute top-[40%] left-[60%] transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group">
+                        <div class="w-4 h-4 bg-tertiary-fixed-dim rounded-full border-2 border-white shadow-md"></div>
+                        <span
+                            class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-surface-container-lowest px-2 py-1 rounded text-label-md text-on-surface shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Bandara
+                            Adisucipto</span>
+                    </div>
+
+                    <!-- Active Hover Marker -->
+                    <div class="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 z-30">
+                        <div
+                            class="w-5 h-5 bg-secondary-fixed rounded-full border-2 border-white shadow-md animate-pulse">
+                        </div>
+                        <!-- Overlay Info Card -->
+                        <div
+                            class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-surface-container-lowest rounded-lg shadow-md border border-surface-variant p-unit*2">
+                            <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">
+                                Halte Aktif</p>
+                            <p class="text-body-md font-body-md font-bold text-primary mt-1">Boulevard UII</p>
+                            <div class="mt-2 flex items-center justify-between">
+                                <span class="text-label-md font-label-md">Demand:</span>
+                                <span
+                                    class="px-2 py-0.5 bg-secondary-container bg-opacity-20 text-on-secondary-container text-label-md rounded-full border border-secondary-container">Sedang</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="absolute top-[60%] left-[40%] transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group">
+                        <div class="w-4 h-4 bg-secondary-fixed rounded-full border-2 border-white shadow-md"></div>
+                        <span
+                            class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-surface-container-lowest px-2 py-1 rounded text-label-md text-on-surface shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">UGM</span>
+                    </div>
+                    <div
+                        class="absolute top-[80%] left-[20%] transform -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer group">
+                        <div class="w-4 h-4 bg-tertiary-fixed-dim rounded-full border-2 border-white shadow-md"></div>
+                        <span
+                            class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 bg-surface-container-lowest px-2 py-1 rounded text-label-md text-on-surface shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">Malioboro</span>
+                    </div>
+
+                    <!-- Legend -->
+                    <div
+                        class="absolute bottom-unit*2 right-unit*2 bg-surface-container-lowest p-unit*2 rounded-lg shadow-sm border border-surface-variant z-20 flex gap-unit*2 backdrop-blur-sm bg-opacity-90">
+                        <div class="flex items-center gap-1">
+                            <div class="w-3 h-3 bg-tertiary-fixed-dim rounded-full border border-surface-variant"></div>
+                            <span class="text-label-md font-label-md text-on-surface-variant">Rendah</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-3 h-3 bg-secondary-fixed rounded-full border border-surface-variant"></div>
+                            <span class="text-label-md font-label-md text-on-surface-variant">Sedang</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <div class="w-3 h-3 bg-error rounded-full border border-surface-variant"></div>
+                            <span class="text-label-md font-label-md text-on-surface-variant">Tinggi</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Input Manual Demand -->
+    <div id="inputModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 flex flex-col" style="max-height:90vh;">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant flex-shrink-0">
+                <div>
+                    <h3 class="text-title-lg font-bold text-primary">Input Data Demand Manual</h3>
+                    <p class="text-[11px] text-on-surface-variant mt-0.5">Rute 14 — 35 Halte · Diperbarui setiap bulan
+                        oleh Admin</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex flex-col items-end">
+                        <label class="text-[10px] text-on-surface-variant font-medium mb-1">Bulan / Tahun</label>
+                        <input type="month" id="inputBulan"
+                            class="text-body-md border border-surface-variant rounded-lg px-3 py-1.5 focus:border-primary outline-none text-on-surface text-sm" />
+                    </div>
+                    <button onclick="closeInputModal()"
+                        class="material-symbols-outlined text-on-surface-variant hover:text-error hover:bg-surface-container-low p-2 rounded-full transition-colors">close</button>
+                </div>
+            </div>
+            <!-- Modal Body: 35 halte form -->
+            <div class="overflow-y-auto flex-1 px-6 py-4">
+                <div class="grid grid-cols-1 gap-2" id="halteForm"></div>
+            </div>
+            <!-- Modal Footer -->
+            <div
+                class="flex items-center justify-between px-6 py-4 border-t border-surface-variant flex-shrink-0 bg-surface-container-low rounded-b-2xl">
+                <p class="text-[11px] text-on-surface-variant">Pastikan data sudah benar sebelum menyimpan.</p>
+                <div class="flex gap-3">
+                    <button onclick="closeInputModal()"
+                        class="px-4 py-2 border border-surface-variant text-on-surface-variant text-[12px] font-semibold rounded-lg hover:bg-surface-container transition-colors">Batal</button>
+                    <button onclick="saveInputData()"
+                        class="px-5 py-2 bg-primary text-white text-[12px] font-semibold rounded-lg hover:opacity-90 transition-opacity shadow-sm flex items-center gap-2">
+                        <span class="material-symbols-outlined" style="font-size:15px;">save</span>Simpan Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Lihat Semua Input -->
+    <div id="transactionsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 flex flex-col" style="max-height:85vh;">
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant flex-shrink-0">
+                <div>
+                    <h3 class="text-title-lg font-bold text-primary">Data Input Hari Ini</h3>
+                    <p class="text-[11px] text-on-surface-variant mt-0.5">Seluruh input penumpang hari ini</p>
+                </div>
+                <button onclick="closeTransactionsModal()" class="material-symbols-outlined text-on-surface-variant hover:text-error hover:bg-surface-container-low p-2 rounded-full transition-colors">close</button>
+            </div>
+            
+            <!-- Modal Body (List) -->
+            <div class="overflow-y-auto flex-1 px-6 py-4 flex flex-col gap-2" id="modalTransactionsContainer">
+                <p class="text-sm text-center text-on-surface-variant py-4">Memuat data transaksi hari ini...</p>
+            </div>
+
+            <!-- Modal Footer (Download CSV) -->
+            <div class="px-6 py-4 border-t border-surface-variant flex-shrink-0 bg-surface-container-low rounded-b-2xl">
+                <p class="text-[12px] font-semibold text-primary mb-2">Download Data Hari Lain (.csv)</p>
+                <div class="flex gap-2">
+                    <input type="date" id="downloadDate" class="flex-1 text-body-md border border-surface-variant rounded-lg px-3 py-1.5 focus:border-primary outline-none text-sm"/>
+                    <button onclick="downloadCSV()" class="px-4 py-1.5 bg-primary text-white text-[12px] font-semibold rounded-lg hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity">
+                        <span class="material-symbols-outlined" style="font-size:16px;">download</span> Unduh
+                    </button>
+                </div>
+                <p class="text-[10px] text-error mt-2 italic flex items-start gap-1">
+                    <span class="material-symbols-outlined mt-0.5" style="font-size:12px;">info</span>
+                    <span>File akan menghilang sepenuhnya bila tidak didownload lebih dari 1 minggu untuk menjaga kapasitas database.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { authService } from './js/services/authService.js';
+        import { transactionService } from './js/services/transactionService.js';
+        import { demandService, halteList } from './js/services/demandService.js';
+        import { csvExportService } from './js/services/csvExportService.js';
+
+        let halteData = Array(35).fill(0);
+        let liveTransactionsUnsubscribe = null;
+        let todayTransactions = [];
+
+        // --- AUTH ---
+        authService.onAuthStateChanged((user) => {
+            if (!user && !localStorage.getItem('demo_admin_logged_in')) {
+                window.location.href = 'login.html';
+            } else {
+                initDashboard();
+            }
+        });
+
+        window.logout = async () => {
+            await authService.logout();
+            window.location.href = 'login.html';
+        };
+
+        // --- INIT DASHBOARD ---
+        function initDashboard() {
+            // Live Transactions
+            liveTransactionsUnsubscribe = transactionService.subscribeLiveTransactions((transactions) => {
+                const container = document.getElementById('liveTransactionsContainer');
+                container.innerHTML = '';
+                if(transactions.length === 0) {
+                    container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Belum ada data transaksi</p>';
+                } else {
+                    transactions.forEach(trx => {
+                        const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}) : '';
+                        container.innerHTML += `
+                            <div class="flex items-center justify-between p-unit*2 border-b border-surface-variant last:border-0 hover:bg-surface-container-low transition-colors rounded-lg">
+                                <div class="flex items-center gap-unit*2">
+                                    <span class="material-symbols-outlined text-primary-container p-2 bg-primary-fixed-dim bg-opacity-20 rounded-full">directions_bus</span>
+                                    <div>
+                                        <p class="text-body-md font-body-md font-bold">${trx.transactionId} <span class="text-on-surface-variant font-normal">| ${trx.userId}</span></p>
+                                        <p class="text-label-md font-label-md text-on-surface-variant mt-1">${timeStr} - ${trx.halteMasuk}</p>
+                                    </div>
+                                </div>
+                                <span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-label-md font-label-md rounded-full bg-opacity-20 border border-secondary-container">${trx.statusPembayaran}</span>
+                            </div>
+                        `;
+                    });
+                }
+            });
+
+            // Initialize Demand Chart (Current Month)
+            const today = new Date();
+            const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+            document.getElementById('displayBulan').value = currentMonth;
+            document.getElementById('inputBulan').value = currentMonth;
+            
+            // Build Form
+            const form = document.getElementById('halteForm');
+            halteList.forEach((nama, i) => {
+                const row = document.createElement('div');
+                row.className = 'flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface-container-low transition-colors';
+                row.innerHTML = `
+                    <span class="text-[11px] font-semibold text-primary bg-primary bg-opacity-10 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">${i + 1}</span>
+                    <label class="text-body-md text-on-surface flex-1 min-w-0 truncate" title="${nama}">${nama}</label>
+                    <input type="number" min="0" placeholder="0" id="halte_${i}" value="0"
+                        class="w-24 border border-surface-variant rounded-lg px-3 py-1.5 text-sm text-on-surface text-right focus:border-primary outline-none transition-colors"
+                    />
+                    <span class="text-[11px] text-on-surface-variant w-16 flex-shrink-0">penumpang</span>
+                `;
+                form.appendChild(row);
+            });
+
+            // Fetch initial chart
+            window.updateDisplayMonth();
+        }
+
+        // --- DEMAND CHART & STATS ---
+        window.updateChartAndStats = function() {
+            const total = halteData.reduce((a, b) => a + b, 0);
+            document.getElementById('statTotal').innerText = total.toLocaleString();
+
+            let maxIndex = 0;
+            for (let i = 1; i < halteData.length; i++) {
+                if (halteData[i] > halteData[maxIndex]) maxIndex = i;
+            }
+            document.getElementById('statTeramai').innerText = halteList[maxIndex] || "-";
+
+            const svgWidth = 700;
+            const svgHeight = 120;
+            const padding = 10;
+            const maxVal = Math.max(...halteData, 10) * 1.2;
+
+            if(halteData.length === 0) return;
+
+            const points = halteData.map((val, i) => {
+                const x = padding + (i / (halteData.length - 1)) * (svgWidth - 2 * padding);
+                const y = svgHeight - padding - (val / maxVal) * (svgHeight - 2 * padding);
+                return { x, y, val, label: halteList[i] };
+            });
+
+            let dLine = `M ${points[0].x},${points[0].y} `;
+            points.forEach(p => dLine += `L ${p.x},${p.y} `);
+            let dArea = dLine + `L ${points[points.length - 1].x},${svgHeight} L ${points[0].x},${svgHeight} Z`;
+
+            document.getElementById('chartLine').setAttribute('d', dLine);
+            document.getElementById('chartArea').setAttribute('d', dArea);
+
+            const chartPointsGroup = document.getElementById('chartPoints');
+            chartPointsGroup.innerHTML = '';
+            points.forEach(p => {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", p.x);
+                circle.setAttribute("cy", p.y);
+                circle.setAttribute("r", "3");
+                circle.setAttribute("fill", "#00342b");
+                chartPointsGroup.appendChild(circle);
+            });
+
+            // Hover interactions
+            const chartContainer = document.getElementById('chartContainer');
+            const tooltip = document.getElementById('chartTooltip');
+            const hoverLine = document.getElementById('hoverLine');
+            const tooltipValue = document.getElementById('tooltipValue');
+            const tooltipLabel = document.getElementById('tooltipLabel');
+
+            chartContainer.onmousemove = (e) => {
+                const rect = chartContainer.getBoundingClientRect();
+                const xPos = e.clientX - rect.left;
+                const ratioX = 700 / rect.width;
+                const svgXPos = xPos * ratioX;
+
+                let closestPoint = points[0];
+                let minDiff = Math.abs(svgXPos - points[0].x);
+                points.forEach(p => {
+                    const diff = Math.abs(svgXPos - p.x);
+                    if (diff < minDiff) {
+                        minDiff = diff;
+                        closestPoint = p;
+                    }
+                });
+
+                const tooltipX = closestPoint.x / ratioX;
+                const ratioY = 120 / rect.height;
+                const tooltipY = closestPoint.y / ratioY;
+
+                tooltip.style.left = `${tooltipX}px`;
+                tooltip.style.top = `${tooltipY}px`;
+                hoverLine.style.left = `${tooltipX}px`;
+
+                tooltipValue.innerText = closestPoint.val.toLocaleString();
+                tooltipLabel.innerText = closestPoint.label;
+
+                tooltip.classList.remove('hidden');
+                tooltip.classList.add('flex');
+                hoverLine.classList.remove('hidden');
+            };
+
+            chartContainer.onmouseleave = () => {
+                tooltip.classList.add('hidden');
+                tooltip.classList.remove('flex');
+                hoverLine.classList.add('hidden');
+            };
+        };
+
+        window.getMonthName = function(dateString) {
+            if (!dateString) return "Bulan Ini";
+            const date = new Date(dateString + "-01");
+            return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+        };
+
+        window.updateDisplayMonth = async function() {
+            const selectedMonth = document.getElementById('displayBulan').value;
+            const [tahun, bulan] = selectedMonth.split('-');
+            document.getElementById('currentMonthLabel').innerText = window.getMonthName(selectedMonth);
+            
+            halteData = await demandService.getDemandByMonth(bulan, tahun);
+            window.updateChartAndStats();
+            document.getElementById('inputBulan').value = selectedMonth; 
+            
+            // Sync form inputs
+            for (let i = 0; i < 35; i++) {
+                const el = document.getElementById(`halte_${i}`);
+                if(el) el.value = halteData[i] || 0;
+            }
+        };
+
+        // --- MANUAL DEMAND INPUT MODAL ---
+        window.openInputModal = function() {
+            document.getElementById('inputModal').classList.remove('hidden');
+            document.getElementById('inputModal').classList.add('flex');
+        };
+
+        window.closeInputModal = function() {
+            document.getElementById('inputModal').classList.add('hidden');
+            document.getElementById('inputModal').classList.remove('flex');
+        };
+
+        window.saveInputData = async function() {
+            const btn = document.querySelector('button[onclick="saveInputData()"]');
+            btn.disabled = true;
+            btn.innerHTML = 'Menyimpan...';
+
+            const bulanInput = document.getElementById('inputBulan').value;
+            const [tahun, bulan] = bulanInput.split('-');
+
+            let newData = [];
+            for (let i = 0; i < 35; i++) {
+                newData.push(parseInt(document.getElementById(`halte_${i}`).value) || 0);
+            }
+
+            try {
+                await demandService.saveDemand(bulan, tahun, newData);
+                
+                // Update local data if the saved month is the currently displayed month
+                if(document.getElementById('displayBulan').value === bulanInput) {
+                    halteData = newData;
+                    window.updateChartAndStats();
+                }
+                
+                alert(`✅ Data demand ${window.getMonthName(bulanInput)} berhasil disimpan!`);
+                window.closeInputModal();
+            } catch(e) {
+                alert("Gagal menyimpan data: " + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Simpan Data';
+            }
+        };
+
+        // --- TRANSACTIONS MODAL & CSV ---
+        window.openTransactionsModal = async function() {
+            const m = document.getElementById('transactionsModal');
+            m.classList.remove('hidden'); 
+            m.classList.add('flex');
+
+            // Load today's transactions automatically
+            const todayStr = new Date().toISOString().split('T')[0];
+            document.getElementById('downloadDate').value = todayStr;
+            await loadTransactionsByDate(todayStr);
+        };
+
+        window.closeTransactionsModal = function() {
+            const m = document.getElementById('transactionsModal');
+            m.classList.add('hidden'); 
+            m.classList.remove('flex');
+        };
+
+        async function loadTransactionsByDate(dateStr) {
+            const container = document.getElementById('modalTransactionsContainer');
+            container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Memuat data...</p>';
+            
+            todayTransactions = await transactionService.getTransactionsByDate(dateStr);
+            container.innerHTML = '';
+            
+            if(todayTransactions.length === 0) {
+                container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Tidak ada transaksi pada tanggal ini.</p>';
+            } else {
+                todayTransactions.forEach(trx => {
+                    const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}) : '';
+                    container.innerHTML += `
+                        <div class="flex items-center justify-between p-3 border border-surface-variant rounded-lg hover:bg-surface-container-low transition-colors">
+                            <div>
+                                <p class="text-body-md font-bold">${trx.transactionId} <span class="text-on-surface-variant font-normal">| ${trx.userId}</span></p>
+                                <p class="text-[11px] text-on-surface-variant font-medium mt-0.5">${timeStr} - ${trx.halteMasuk}</p>
+                            </div>
+                            <span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded-full bg-opacity-20 border border-secondary-container">${trx.statusPembayaran}</span>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        document.getElementById('downloadDate').addEventListener('change', async (e) => {
+            await loadTransactionsByDate(e.target.value);
+        });
+
+        window.downloadCSV = function() {
+            const date = document.getElementById('downloadDate').value;
+            if(!date) return alert("Silakan pilih tanggal terlebih dahulu.");
+            csvExportService.downloadCSV(todayTransactions, date);
+        };
+
+        // Close modals on backdrop click
+        document.getElementById('inputModal').addEventListener('click', function (e) {
+            if (e.target === this) window.closeInputModal();
+        });
+        document.getElementById('transactionsModal').addEventListener('click', function (e) {
+            if (e.target === this) window.closeTransactionsModal();
+        });
+    </script>
+</body>
+
+</html>

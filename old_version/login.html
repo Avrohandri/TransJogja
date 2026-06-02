@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login - Trans Jogja Management System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface": "#191c1e",
+                        "primary": "#00342b",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#006c49",
+                        "on-surface-variant": "#3f4945",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f7f9fb",
+                        "outline": "#707975",
+                        "surface-container-low": "#f2f4f6",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#bfc9c4",
+                        "primary-container": "#004d40"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "card-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "title-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "600" }],
+                        "title-lg": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .batik-pattern {
+            background-image: radial-gradient(circle at 2px 2px, rgba(0, 52, 43, 0.05) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex items-center justify-center p-4 relative overflow-hidden batik-pattern">
+<!-- Ambient Decorative Elements -->
+<div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-secondary opacity-5 rounded-full blur-3xl pointer-events-none"></div>
+<main class="w-full max-w-md bg-surface-container-lowest rounded-xl border border-surface-variant p-card-padding relative z-10" style="box-shadow: 0px 4px 20px rgba(0, 77, 64, 0.05);">
+<!-- Header -->
+<div class="text-center mb-8">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-low text-primary mb-4">
+<span class="material-symbols-outlined text-4xl" data-icon="directions_bus" data-weight="fill">directions_bus</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Selamat Datang Kembali</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Trans Jogja Management System</p>
+</div>
+<!-- Role Toggle -->
+<div class="flex p-1 bg-surface-container-low rounded-lg mb-6">
+    <button id="tabUser" onclick="selectRole('user')" class="flex-1 py-2 px-4 rounded-md bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md text-center transition-all">
+        User
+    </button>
+    <button id="tabAdmin" onclick="selectRole('admin')" class="flex-1 py-2 px-4 rounded-md text-on-surface-variant font-label-md text-label-md text-center hover:text-primary transition-all">
+        Admin
+    </button>
+</div>
+<!-- Form -->
+<form class="space-y-6">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2" for="email">Email / Username</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline" data-icon="person">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors font-body-md text-body-md text-on-surface placeholder-outline" id="email" placeholder="Masukkan email atau username" type="text"/>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2" for="password">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-outline" data-icon="lock">lock</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface rounded-lg border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors font-body-md text-body-md text-on-surface placeholder-outline" id="password" placeholder="Masukkan password" type="password"/>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<label class="flex items-center space-x-2 cursor-pointer">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4 bg-surface" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant">Remember Me</span>
+</label>
+<a class="font-label-md text-label-md text-secondary hover:underline transition-all" href="#">Forgot Password?</a>
+</div>
+<button onclick="handleLogin()" class="w-full py-3 px-4 bg-primary text-on-primary font-title-lg text-title-lg rounded-lg hover:bg-primary-container active:scale-[0.98] transition-all flex items-center justify-center space-x-2" type="button">
+<span>Masuk</span>
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Notes -->
+<div class="mt-8 text-center space-y-4">
+<p class="font-body-md text-body-md text-on-surface-variant" id="registerText">
+                Belum punya akun? <a class="text-secondary font-semibold hover:underline transition-all" href="register.html">Daftar sekarang</a>
+</p>
+<div class="pt-4 border-t border-surface-variant">
+<p class="font-label-md text-label-md text-outline">
+<span class="material-symbols-outlined text-[14px] align-middle mr-1" data-icon="info">info</span>
+                    Akses admin dikelola oleh pengembang
+                </p>
+</div>
+</div>
+</main>
+
+<script type="module">
+    import { authService } from './js/services/authService.js';
+
+    let currentRole = 'user';
+    
+    // Expose selectRole to global window object since we are in a module
+    window.selectRole = function(role) {
+        currentRole = role;
+        const tabUser = document.getElementById('tabUser');
+        const tabAdmin = document.getElementById('tabAdmin');
+        const registerText = document.getElementById('registerText');
+        
+        if (role === 'admin') {
+            tabAdmin.className = "flex-1 py-2 px-4 rounded-md bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md text-center transition-all";
+            tabUser.className = "flex-1 py-2 px-4 rounded-md text-on-surface-variant font-label-md text-label-md text-center hover:text-primary transition-all";
+            registerText.style.display = 'none'; // Admin cannot register
+            document.getElementById('email').value = "admin@transjogja.id";
+            document.getElementById('password').value = "admin123";
+        } else {
+            tabUser.className = "flex-1 py-2 px-4 rounded-md bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md text-center transition-all";
+            tabAdmin.className = "flex-1 py-2 px-4 rounded-md text-on-surface-variant font-label-md text-label-md text-center hover:text-primary transition-all";
+            registerText.style.display = 'block';
+            document.getElementById('email').value = "";
+            document.getElementById('password').value = "";
+        }
+    };
+
+    window.handleLogin = async function() {
+        if (currentRole === 'admin') {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if(!email || !password) {
+                alert("Mohon isi email dan password!");
+                return;
+            }
+
+            try {
+                // Tampilkan state loading
+                document.getElementById('email').disabled = true;
+                document.getElementById('password').disabled = true;
+                
+                await authService.login(email, password);
+                window.location.href = 'index.html';
+            } catch(error) {
+                alert(error.message);
+                document.getElementById('email').disabled = false;
+                document.getElementById('password').disabled = false;
+            }
+        } else {
+            alert('Fitur User Dashboard belum tersedia. Silakan gunakan tab Admin untuk masuk ke Admin Panel.');
+        }
+    };
+
+    // Auto check if already logged in
+    authService.onAuthStateChanged((user) => {
+        if (user) {
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+</body>
+</html>

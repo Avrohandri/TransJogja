@@ -1,0 +1,236 @@
+{
+  "type": "FeatureCollection",
+  "name": "rute_14_adisucipto_ke_terminal_pakem_bersih",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "route_name": "Rute 14 Trans Jogja",
+        "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem",
+        "stop_count": 35,
+        "note": "Rute dibersihkan menjadi satu arah dan halte sesuai daftar pengguna."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [110.4357106, -7.7845212],
+          [110.4297658, -7.7820541],
+          [110.4310562, -7.7693853],
+          [110.4315421, -7.7678861],
+          [110.4310201, -7.7833639],
+          [110.4315206, -7.765633],
+          [110.4328691, -7.7607143],
+          [110.433896,  -7.7554682],
+          [110.4345757, -7.7504724],
+          [110.4341572, -7.7428221],
+          [110.4345841, -7.7353784],
+          [110.4347942, -7.7314029],
+          [110.4354068, -7.723242],
+          [110.4381609, -7.7223016],
+          [110.438211,  -7.7189712],
+          [110.442979,  -7.7131712],
+          [110.4478741, -7.7135459],
+          [110.4487153, -7.7115009],
+          [110.4474261, -7.7021127],
+          [110.442111,  -7.7041259],
+          [110.4393649, -7.7050782],
+          [110.4349713, -7.7049142],
+          [110.4331509, -7.7048027],
+          [110.4310374, -7.7048608],
+          [110.4264208, -7.7042049],
+          [110.4205566, -7.7023223],
+          [110.4169564, -7.7011276],
+          [110.4155216, -7.6998515],
+          [110.4179513, -7.6955859],
+          [110.4187258, -7.6872834],
+          [110.4191124, -7.6840524],
+          [110.4173174, -7.6725689],
+          [110.4175705, -7.669172],
+          [110.4176697, -7.669071],
+          [110.4201971, -7.6668401]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 1, "name": "Halte TJ Bandara Adisucipto", "source_name": "Halte Bandara Adisutjipto", "source_id": "node/10700969429", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4357106, -7.7845212]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 2, "name": "Kantor Kesehatan Pelabuhan Yogya", "source_name": "Kantor Kesehatan Pelabuhan Yogyakarta", "source_id": "node/10704229421", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4297658, -7.7820541]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 3, "name": "TJ RRU Disnaker", "source_name": "TPB RRU PJN", "source_id": "node/3632597197", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4310562, -7.7693853]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 4, "name": "Disnakertrans DI Yogyakarta", "source_name": "Disnakertrans DI Yogyakarta", "source_id": "node/10703300266", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4315421, -7.7678861]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 5, "name": "Halte Jl. Solo Maguwo", "source_name": "Halte Maguwo Sambilegi", "source_id": "node/3631487224", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4310201, -7.7833639]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 6, "name": "SMKN 1 Depok", "source_name": "SMKN 1 Depok (Halte 2)", "source_id": "node/10703774897", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4315206, -7.765633]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 7, "name": "SDN 1 Depok", "source_name": "SD N 1 Depok", "source_id": "node/12551155381", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4328691, -7.7607143]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 8, "name": "Kantor Urusan Agama Depok", "source_name": "KUA Depok (Timur)", "source_id": "node/10703765338", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.433896, -7.7554682]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 9, "name": "MAN Sleman", "source_name": "MAN 2 Sleman (Halte 2)", "source_id": "node/10703765340", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4345757, -7.7504724]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 10, "name": "SMA Budi Mulia Dua", "source_name": "SMA Budi Mulia Dua", "source_id": "node/10703725996", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4341572, -7.7428221]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 11, "name": "Indomaret Pokoh Sambiroto", "source_name": "Indomaret Pokoh Sambiroto", "source_id": "node/12551155377", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4345841, -7.7353784]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 12, "name": "Kantor Desa Wedomartani", "source_name": "Kantor Desa Wedomartani", "source_id": "node/10704223883", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4347942, -7.7314029]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 13, "name": "Simpang Babadan", "source_name": "Simpang Babadan", "source_id": "node/12551155376", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4354068, -7.723242]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 14, "name": "Simpang Selomartani", "source_name": "Simpang Selomartani", "source_id": "node/12551155373", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4381609, -7.7223016]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 15, "name": "Simpang Kabunan", "source_name": "Simpang Tajem Kabunan", "source_id": "node/10704218545", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.438211, -7.7189712]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 16, "name": "Halte Raya Kabunan", "source_name": "Jl. Raya Kabunan", "source_id": "node/10704159736", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.442979, -7.7131712]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 17, "name": "RS Kemasan", "source_name": "RS Kemasan", "source_id": "node/10704159738", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4478741, -7.7135459]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 18, "name": "Dusun Kenthi", "source_name": "Dusun Kenthi", "source_id": "node/12551155372", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4487153, -7.7115009]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 19, "name": "Simpang Pasar Jangkang", "source_name": "Simpang Pasar Jangkang", "source_id": "node/10704105357", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4474261, -7.7021127]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 20, "name": "Tugu Batas Desa Yapah", "source_name": "Tugu Batas Desa Yapah", "source_id": "node/12551155370", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.442111, -7.7041259]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 21, "name": "Timur Jembatan Yapah", "source_name": "Timur Jembatan Yapah", "source_id": "node/12551155368", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4393649, -7.7050782]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 22, "name": "SMA Negeri Ngaglik", "source_name": "SMA Negeri 2 Ngaglik", "source_id": "node/10704112334", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4349713, -7.7049142]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 23, "name": "Simpang Losari (Cozy)", "source_name": "Simpang Losari (Cozy)", "source_id": "node/12551155365", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4331509, -7.7048027]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 24, "name": "SPBU Mindi", "source_name": "SPBU Mindi", "source_id": "node/12551155364", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4310374, -7.7048608]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 25, "name": "Lapangan Klidon", "source_name": "Lapangan Klidon", "source_id": "node/12551155362", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4264208, -7.7042049]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 26, "name": "SDN Sedomulyo", "source_name": "SD Negeri Selomulyo", "source_id": "node/10704092312", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4205566, -7.7023223]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 27, "name": "RSU Gramedika", "source_name": "RSU Gramedika", "source_id": "node/12551155359", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4169564, -7.7011276]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 28, "name": "Simpang Besi Jangkang", "source_name": "Simpang Besi Jangkang", "source_id": "node/12551155352", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4155216, -7.6998515]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 29, "name": "Pusat Rehabilitasi YAKKUM", "source_name": "Halte Pusat Rehabilitasi Yakkum", "source_id": "node/10704046566", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4179513, -7.6955859]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 30, "name": "Boulevard UII", "source_name": "Kampus Terpadu UII", "source_id": "node/10704061035", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4187258, -7.6872834]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 31, "name": "Simpang Degolan", "source_name": "Simpang Dogolan", "source_id": "node/12551155356", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4191124, -7.6840524]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 32, "name": "Dusun Kledokan (Soto Brakot)", "source_name": "Dusun Kledokan (Soto Brakot)", "source_id": "node/12551155357", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4173174, -7.6725689]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 33, "name": "RS Panti Nugroho", "source_name": "Halte RS Panti Nugroho", "source_id": "node/10704066201", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4175705, -7.669172]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 34, "name": "SMPN 4 Pakem", "source_name": "Halte SMPN 4 Pakem", "source_id": "node/10704066200", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4176697, -7.669071]}
+    },
+    {
+      "type": "Feature",
+      "properties": {"order": 35, "name": "Terminal Pakem", "source_name": "Terminal Pakem", "source_id": "node/10704066198", "direction": "Halte TJ Bandara Adisucipto -> Terminal Pakem"},
+      "geometry": {"type": "Point", "coordinates": [110.4201971, -7.6668401]}
+    }
+  ]
+}
