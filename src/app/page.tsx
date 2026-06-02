@@ -89,7 +89,7 @@ export default function Dashboard() {
 
   let dLine = points.length > 0 ? `M ${points[0].x},${points[0].y} ` : "";
   points.forEach(p => dLine += `L ${p.x},${p.y} `);
-  let dArea = points.length > 0 ? dLine + `L ${points[points.length - 1].x},${svgHeight} L ${points[0].x},${svgHeight} Z` : "";
+  const dArea = points.length > 0 ? dLine + `L ${points[points.length - 1].x},${svgHeight} L ${points[0].x},${svgHeight} Z` : "";
 
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 

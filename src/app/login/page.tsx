@@ -31,8 +31,8 @@ export default function LoginPage() {
       } else {
          router.push("/user");
       }
-    } catch (err: any) {
-      setError(err.message || "Gagal login");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Gagal login");
     }
   };
 
