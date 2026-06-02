@@ -47,11 +47,12 @@ let dummyHalteData = Array(HALTE_COUNT).fill(0).map(() => Math.floor(Math.random
 
 export const demandService = {
     async getDemandByMonth(bulan: string | number, tahun: string | number): Promise<number[]> {
-        if (!db) return dummyHalteData;
+        const firestoreDb = db;
+        if (!firestoreDb) return dummyHalteData;
 
         try {
             const q = query(
-                collection(db, "demand"), 
+                collection(firestoreDb, "demand"), 
                 where("bulan", "==", Number(bulan)), 
                 where("tahun", "==", Number(tahun)),
                 where("routeId", "==", "RUTE_14")
@@ -78,20 +79,21 @@ export const demandService = {
     },
 
     async saveDemand(bulan: string | number, tahun: string | number, demandDataArray: number[]) {
-        if (!db) {
+        const firestoreDb = db;
+        if (!firestoreDb) {
             dummyHalteData = [...demandDataArray];
             return true;
         }
 
         try {
-            const batch = writeBatch(db);
+            const batch = writeBatch(firestoreDb);
             
             demandDataArray.forEach((jumlah, i) => {
                 const namaHalte = halteList[i];
                 const safeName = namaHalte.replace(/[^a-zA-Z0-9]/g, '');
                 const docId = `RUTE_14_${tahun}_${bulan}_${safeName}`;
                 
-                const demandRef = doc(db, "demand", docId);
+                const demandRef = doc(firestoreDb, "demand", docId);
                 batch.set(demandRef, {
                     halteId: `HLT-${(i+1).toString().padStart(3, '0')}`,
                     namaHalte: namaHalte,

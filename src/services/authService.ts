@@ -14,12 +14,13 @@ export const authService = {
             throw new Error("Koneksi Firebase gagal, dan email/password demo salah.");
         }
 
+        const firestoreDb = db;
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             
             // Check role
-            const userDoc = await getDoc(doc(db, "users", user.uid));
+            const userDoc = await getDoc(doc(firestoreDb, "users", user.uid));
             const role = userDoc.exists() ? userDoc.data().role : "user";
             
             return { success: true, user: { ...user, role } };
@@ -31,9 +32,10 @@ export const authService = {
 
     async register(email: string, password: string, fullname: string, phone: string) {
         if (!auth || !db) throw new Error("Koneksi Firebase gagal.");
+        const firestoreDb = db;
         try {
             const userCred = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(db, "users", userCred.user.uid), {
+            await setDoc(doc(firestoreDb, "users", userCred.user.uid), {
                 fullname,
                 email,
                 phone,

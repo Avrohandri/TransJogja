@@ -25,9 +25,10 @@ const fallbackRoute: Route = {
 
 export const routeService = {
     async getRoute(routeId: string): Promise<Route | null> {
-        if (!db) return fallbackRoute;
+        const firestoreDb = db;
+        if (!firestoreDb) return fallbackRoute;
         try {
-            const docRef = doc(db, "routes", routeId);
+            const docRef = doc(firestoreDb, "routes", routeId);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
                 return docSnap.data() as Route;
