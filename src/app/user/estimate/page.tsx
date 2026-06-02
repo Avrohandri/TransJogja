@@ -37,19 +37,16 @@ export default function RouteEstimationPage() {
     const tripEta = calculateETA(distanceTrip, 25);
 
     // Find nearest bus to fromHalte
-    let nearestBus: BusLocation | null = null;
     let busEta = 0;
 
     if (buses.length > 0) {
-        let minBusDist = Infinity;
-        buses.forEach(b => {
-            const d = calculateDistanceKm(b.latitude, b.longitude, fromHalte.latitude, fromHalte.longitude);
-            if (d < minBusDist) {
-                minBusDist = d;
-                nearestBus = b;
-            }
-        });
-        busEta = calculateETA(minBusDist, nearestBus?.speed || 25);
+        const nearestBus = buses.reduce<BusLocation>((closest, b) => {
+            const dClosest = calculateDistanceKm(closest.latitude, closest.longitude, fromHalte.latitude, fromHalte.longitude);
+            const dCurrent = calculateDistanceKm(b.latitude, b.longitude, fromHalte.latitude, fromHalte.longitude);
+            return dCurrent < dClosest ? b : closest;
+        }, buses[0]);
+        const minBusDist = calculateDistanceKm(nearestBus.latitude, nearestBus.longitude, fromHalte.latitude, fromHalte.longitude);
+        busEta = calculateETA(minBusDist, nearestBus.speed || 25);
     }
 
     return (
