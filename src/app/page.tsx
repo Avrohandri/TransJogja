@@ -255,14 +255,14 @@ export default function Dashboard() {
         </div>
 
         {/* Right Column */}
-        <div className="lg:col-span-7 h-fit">
-          <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col relative overflow-hidden">
+        <div className="lg:col-span-7 flex flex-col">
+          <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col relative overflow-hidden h-full">
             <div className="mb-4 z-10 relative bg-white bg-opacity-90 p-2 rounded-lg inline-block w-max backdrop-blur-sm">
               <h2 className="text-xl font-bold text-[#00342b]">Peta Rute</h2>
               <p className="text-sm text-[#3f4945]">Visualisasi rute Trans Jogja berdasarkan halte aktif</p>
             </div>
             
-            <div className="rounded-lg overflow-hidden relative bg-[#e0e3e5]" style={{ height: '530px' }}>
+            <div className="rounded-lg overflow-hidden relative bg-[#e0e3e5] flex-grow min-h-[400px]">
               <UserMap isDetail={true} />
             </div>
           </div>
