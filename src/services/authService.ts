@@ -72,10 +72,12 @@ export const authService = {
             return () => {};
         }
 
+        const firestoreDb = db;
         return onAuthStateChanged(auth, async (user: User | null) => {
             if (user) {
                 try {
-                    const userDoc = await getDoc(doc(db, "users", user.uid));
+                    if (!firestoreDb) { callback({ ...user, role: "user" }); return; }
+                    const userDoc = await getDoc(doc(firestoreDb, "users", user.uid));
                     const role = userDoc.exists() ? userDoc.data().role : "user";
                     callback({ ...user, role });
                 } catch {
