@@ -22,8 +22,8 @@ export default function RegisterPage() {
       await authService.register(email, password, fullname, phone);
       alert("Pendaftaran berhasil! Silakan nikmati layanan kami.");
       router.push("/user");
-    } catch (err: any) {
-      setError(err.message || "Gagal mendaftar");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Gagal mendaftar");
     } finally {
       setIsLoading(false);
     }

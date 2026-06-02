@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import { halteService, Halte } from "@/services/halteService";
 import { busLocationService, BusLocation } from "@/services/busLocationService";
 import { calculateDistanceKm, calculateETA } from "@/utils/distance";

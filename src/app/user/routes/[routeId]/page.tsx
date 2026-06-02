@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { routeService, Route } from "@/services/routeService";
 import { halteService, Halte } from "@/services/halteService";

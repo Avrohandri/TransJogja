@@ -1,12 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { halteService, Halte } from "@/services/halteService";
 import { demandService } from "@/services/demandService";
 
 export default function RoutesPage() {
-    const router = useRouter();
     const [tab, setTab] = useState<"route" | "bus_stop">("route");
     const [search, setSearch] = useState("");
     const [haltes, setHaltes] = useState<Halte[]>([]);

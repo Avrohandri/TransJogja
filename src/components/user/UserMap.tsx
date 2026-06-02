@@ -9,7 +9,7 @@ import { demandService } from "@/services/demandService";
 import { fetchRoadPolyline, RUTE_14_HALTE_COORDS, RUTE_14_GEOJSON_POLYLINE } from "@/utils/roadRoute";
 
 // Fix Leaflet marker icons
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',

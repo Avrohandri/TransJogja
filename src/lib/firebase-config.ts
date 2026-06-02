@@ -19,7 +19,7 @@ try {
     auth = getAuth(app);
     db = getFirestore(app);
   }
-} catch (e) {
+} catch {
   console.warn("Firebase tidak diinisialisasi. Ganti config terlebih dahulu.");
 }
 

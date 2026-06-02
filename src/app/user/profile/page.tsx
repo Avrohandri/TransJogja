@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function UserProfilePage() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<Record<string, unknown> | null>(null);
 
     useEffect(() => {
         const unsubscribe = authService.onAuthStateChanged((u) => {
