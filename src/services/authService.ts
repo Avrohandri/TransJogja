@@ -3,7 +3,7 @@ import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../lib/firebase-config";
 
 export const authService = {
-    async login(email: string, password: string):Promise<{success: boolean, user: any}> {
+    async login(email: string, password: string):Promise<{success: boolean, user: Record<string, unknown>}> {
         // ALWAYS check for demo credentials first, so you can test easily
         if (email === 'admin@transjogja.id' && password === 'admin123') {
             if(typeof window !== 'undefined') localStorage.setItem('demo_admin_logged_in', 'true');
@@ -23,7 +23,7 @@ export const authService = {
             const role = userDoc.exists() ? userDoc.data().role : "user";
             
             return { success: true, user: { ...user, role } };
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error("Login error:", error);
             throw new Error("Email atau Password salah (atau belum terdaftar di Firebase).");
         }
@@ -41,9 +41,10 @@ export const authService = {
                 createdAt: serverTimestamp()
             });
             return userCred.user;
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error("Register error:", e);
-            throw new Error(e.message || "Gagal mendaftar");
+            const msg = e instanceof Error ? e.message : "Gagal mendaftar";
+            throw new Error(msg);
         }
     },
 
@@ -56,7 +57,7 @@ export const authService = {
         }
     },
 
-    onAuthStateChanged(callback: (user: any) => void) {
+    onAuthStateChanged(callback: (user: Record<string, unknown> | null) => void) {
         const checkDemoLogin = () => {
             const isDemoAdmin = typeof window !== 'undefined' ? localStorage.getItem('demo_admin_logged_in') : null;
             if (isDemoAdmin) {
@@ -77,7 +78,7 @@ export const authService = {
                     const userDoc = await getDoc(doc(db, "users", user.uid));
                     const role = userDoc.exists() ? userDoc.data().role : "user";
                     callback({ ...user, role });
-                } catch(e) {
+                } catch {
                     callback({ ...user, role: "user" });
                 }
             } else {

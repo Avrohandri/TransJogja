@@ -68,7 +68,7 @@ export default function Dashboard() {
       setHalteData([...inputData]);
       setIsInputModalOpen(false);
       alert("Data demand berhasil disimpan!");
-    } catch (e) {
+    } catch {
       alert("Gagal menyimpan data");
     } finally {
       setIsSaving(false);

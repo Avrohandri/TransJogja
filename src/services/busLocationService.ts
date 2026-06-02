@@ -1,5 +1,6 @@
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
+
 
 export interface BusLocation {
     busId: string;
@@ -9,7 +10,7 @@ export interface BusLocation {
     speed: number;
     heading: number;
     status: string;
-    updatedAt: any;
+    updatedAt: Timestamp | null;
 }
 
 export const busLocationService = {

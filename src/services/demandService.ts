@@ -62,7 +62,7 @@ export const demandService = {
                 return dummyHalteData;
             }
 
-            let dataArray = Array(HALTE_COUNT).fill(0);
+            const dataArray = Array(HALTE_COUNT).fill(0);
             snapshot.forEach(doc => {
                 const data = doc.data();
                 const index = halteList.indexOf(data.namaHalte);
