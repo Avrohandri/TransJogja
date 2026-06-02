@@ -66,7 +66,7 @@ export default function LoginPage() {
     setTimeout(() => {
       setMode(next);
       setSliding(false);
-    }, 600);
+    }, 350);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -106,7 +106,7 @@ export default function LoginPage() {
           backgroundColor: "#00342b",
           backgroundImage: "radial-gradient(#004d40 1px, transparent 1px)",
           backgroundSize: "20px 20px",
-          transition: "left 0.65s cubic-bezier(0.77,0,0.175,1)",
+          transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
           zIndex: 10,
         }}
       >
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
         {/* Hero body */}
         <div className="relative z-10 mb-6"
-          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateY(12px)" : "translateY(0)", transition: "opacity 0.3s, transform 0.3s" }}>
+          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateY(12px)" : "translateY(0)", transition: "opacity 0.2s, transform 0.2s" }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 mb-5">
             <span className="w-2 h-2 rounded-full bg-[#94d3c1] animate-pulse" />
             <span className="text-[11px] font-semibold tracking-widest uppercase text-[#94d3c1]">
@@ -162,12 +162,12 @@ export default function LoginPage() {
         className="absolute top-0 h-full w-[55%] bg-[#f8fafa] flex flex-col justify-center items-center px-10 overflow-y-auto"
         style={{
           left: formLeft,
-          transition: "left 0.65s cubic-bezier(0.77,0,0.175,1)",
+          transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
           zIndex: 10,
         }}
       >
         <div className="w-full max-w-md py-10"
-          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateX(10px)" : "translateX(0)", transition: "opacity 0.25s, transform 0.25s" }}>
+          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateX(10px)" : "translateX(0)", transition: "opacity 0.2s, transform 0.2s" }}>
 
           {/* Mode toggle */}
           <div className="flex p-1 bg-[#eceeee] rounded-xl mb-10 w-fit">
