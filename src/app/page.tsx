@@ -1,4 +1,5 @@
 "use client";
+import Image from 'next/image';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -110,9 +111,11 @@ export default function Dashboard() {
       <header className="bg-white rounded-xl px-6 py-3 shadow-sm mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3 py-1">
           <div className="relative w-9 h-9">
-            <img 
+            <Image 
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop"
-              alt="Avatar" 
+              alt="Avatar"
+              width={36}
+              height={36}
               className="w-full h-full rounded-full object-cover border border-[#e0e3e5]" 
             />
             <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#006c49] rounded-full border-2 border-white"></span>
@@ -263,7 +266,7 @@ export default function Dashboard() {
             </div>
             
             <div className="rounded-lg overflow-hidden relative bg-[#e0e3e5]" style={{ height: '530px' }}>
-              <img alt="Map" className="w-full h-full object-cover opacity-50 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcNyFyEee-Cxo0Ycf5uMEZ3J1TGcb_gEMZd3_CFua3z1lbKFk26P3PW8cL2Lu7X8kkIyKPuEVhfC5qtyWiEVJPiWaTR7L8Z_2D0VgFnAKWctJhJ-BfVxbn0UmrwFWJvSOEztQLCCN8iFpGVgU_G6rRJSUs4F5TqgLAuV4JTpTIaZoEEYIUdWCNS0eljE1UCgV-93J3WLMSaG0j8qU8sFB-xEDr61aIgD9rmORBxfq1wk7wEyKjkFpQbYfvGd-xICMxzW9zQw35pSy0" />
+              <Image alt="Map" fill className="object-cover opacity-50 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcNyFyEee-Cxo0Ycf5uMEZ3J1TGcb_gEMZd3_CFua3z1lbKFk26P3PW8cL2Lu7X8kkIyKPuEVhfC5qtyWiEVJPiWaTR7L8Z_2D0VgFnAKWctJhJ-BfVxbn0UmrwFWJvSOEztQLCCN8iFpGVgU_G6rRJSUs4F5TqgLAuV4JTpTIaZoEEYIUdWCNS0eljE1UCgV-93J3WLMSaG0j8qU8sFB-xEDr61aIgD9rmORBxfq1wk7wEyKjkFpQbYfvGd-xICMxzW9zQw35pSy0" unoptimized />
             </div>
           </div>
         </div>
@@ -344,7 +347,7 @@ function TransactionsModal({ onClose }: { onClose: () => void }) {
       setIsLoading(false);
       
       // Auto cleanup older than 7 days (triggered gracefully in the background)
-      transactionService.cleanupOldTransactions?.();
+      // transactionService.cleanupOldTransactions?.();
     });
   }, [downloadDate]);
 
