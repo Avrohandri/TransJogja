@@ -48,7 +48,7 @@ export default function UserProfilePage() {
                 <div className="w-20 h-20 bg-[#006c49] rounded-full flex items-center justify-center text-white text-3xl font-bold mb-3 shadow-md">
                     {initials}
                 </div>
-                <h2 className="font-bold text-xl text-[#00342b]">{user.fullname || user.email.split('@')[0]}</h2>
+                <h2 className="font-bold text-xl text-[#00342b]">{user.fullname || user.email?.split('@')[0] || "Pengguna"}</h2>
                 <p className="text-sm text-[#3f4945]">{user.email}</p>
                 <div className="mt-3 bg-[#e0e3e5] text-[#3f4945] text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-widest">
                     {user.role}
