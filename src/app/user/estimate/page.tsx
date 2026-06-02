@@ -1,11 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { halteService, Halte } from "@/services/halteService";
 import { busLocationService, BusLocation } from "@/services/busLocationService";
 import { calculateDistanceKm, calculateETA } from "@/utils/distance";
 
-export default function RouteEstimationPage() {
+function RouteEstimationContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const fromId = searchParams.get("from");
@@ -137,3 +137,12 @@ export default function RouteEstimationPage() {
         </div>
     );
 }
+
+export default function RouteEstimationPage() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#f7f9fb] flex items-center justify-center text-[#3f4945]">Memuat estimasi...</div>}>
+            <RouteEstimationContent />
+        </Suspense>
+    );
+}
+
