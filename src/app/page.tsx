@@ -1,5 +1,4 @@
 "use client";
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
 import React, { useState, useEffect } from 'react';
@@ -18,7 +17,7 @@ export default function Dashboard() {
   const [displayMonth, setDisplayMonth] = useState("");
   const [inputData, setInputData] = useState<number[]>(Array(35).fill(0));
   const [isSaving, setIsSaving] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<{ fullname?: string; email?: string; role?: string } | null>(null);
   
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
