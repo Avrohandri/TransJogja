@@ -1,5 +1,6 @@
 "use client";
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,6 +9,7 @@ import { demandService, halteList } from '@/services/demandService';
 import { authService } from '@/services/authService';
 
 export default function Dashboard() {
+  const UserMap = dynamic(() => import('@/components/user/UserMap'), { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center bg-[#e0e3e5] text-[#3f4945]">Memuat Peta...</div> });
   const router = useRouter();
   const [liveTransactions, setLiveTransactions] = useState<Transaction[]>([]);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
@@ -16,6 +18,7 @@ export default function Dashboard() {
   const [displayMonth, setDisplayMonth] = useState("");
   const [inputData, setInputData] = useState<number[]>(Array(35).fill(0));
   const [isSaving, setIsSaving] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
@@ -25,6 +28,7 @@ export default function Dashboard() {
       if (!user) {
         router.push("/login");
       } else {
+        setCurrentUser(user);
         setIsAuthLoading(false);
       }
     });
@@ -110,18 +114,12 @@ export default function Dashboard() {
       {/* Top Navbar */}
       <header className="bg-white rounded-xl px-6 py-3 shadow-sm mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3 py-1">
-          <div className="relative w-9 h-9">
-            <Image 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&auto=format&fit=crop"
-              alt="Avatar"
-              width={36}
-              height={36}
-              className="w-full h-full rounded-full object-cover border border-[#e0e3e5]" 
-            />
+          <div className="relative w-9 h-9 flex items-center justify-center bg-[#e0e3e5] rounded-full border border-[#bfc9c4] text-xl">
+            🚌
             <span className="absolute bottom-0 right-0 w-3 h-3 bg-[#006c49] rounded-full border-2 border-white"></span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-bold text-[#191c1e]">David Greymaax</span>
+            <span className="text-sm font-bold text-[#191c1e]">{currentUser?.fullname || currentUser?.email?.split('@')[0] || "Administrator"}</span>
             <span className="text-[10px] text-[#3f4945] font-medium">Administrator</span>
           </div>
         </div>
@@ -266,7 +264,7 @@ export default function Dashboard() {
             </div>
             
             <div className="rounded-lg overflow-hidden relative bg-[#e0e3e5]" style={{ height: '530px' }}>
-              <Image alt="Map" fill className="object-cover opacity-50 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcNyFyEee-Cxo0Ycf5uMEZ3J1TGcb_gEMZd3_CFua3z1lbKFk26P3PW8cL2Lu7X8kkIyKPuEVhfC5qtyWiEVJPiWaTR7L8Z_2D0VgFnAKWctJhJ-BfVxbn0UmrwFWJvSOEztQLCCN8iFpGVgU_G6rRJSUs4F5TqgLAuV4JTpTIaZoEEYIUdWCNS0eljE1UCgV-93J3WLMSaG0j8qU8sFB-xEDr61aIgD9rmORBxfq1wk7wEyKjkFpQbYfvGd-xICMxzW9zQw35pSy0" unoptimized />
+              <UserMap isDetail={true} />
             </div>
           </div>
         </div>
