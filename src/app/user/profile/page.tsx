@@ -4,9 +4,16 @@ import { useRouter } from "next/navigation";
 import { authService } from "@/services/authService";
 import Link from "next/link";
 
+interface UserProfile {
+    email?: string;
+    fullname?: string;
+    role?: string;
+    [key: string]: unknown;
+}
+
 export default function UserProfilePage() {
     const router = useRouter();
-    const [user, setUser] = useState<Record<string, unknown> | null>(null);
+    const [user, setUser] = useState<UserProfile | null>(null);
 
     useEffect(() => {
         const unsubscribe = authService.onAuthStateChanged((u) => {
