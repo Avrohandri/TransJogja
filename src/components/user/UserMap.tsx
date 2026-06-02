@@ -43,7 +43,7 @@ const getHalteIcon = (demandVal: number) => {
 function LocateControl() {
     const map = useMap();
     useEffect(() => {
-        const locateBtn = L.control({ position: 'bottomright' });
+        const locateBtn = new L.Control({ position: 'bottomright' });
         locateBtn.onAdd = function () {
             const div = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
             div.innerHTML = `<button style="background:white; border:none; padding:10px; border-radius:8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); cursor:pointer; margin-bottom:8px;">
