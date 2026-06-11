@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍲 Web Game Kuliner Nusantara
 
-## Getting Started
+Selamat datang di repositori **Web Game Kuliner Nusantara**! Proyek ini merupakan platform permainan edukatif interaktif berbasis web yang didedikasikan untuk memperkenalkan dan melestarikan kekayaan kuliner tradisional dari berbagai daerah di Indonesia (seperti Jogja, Bali, Aceh, dan Maluku).
 
-First, run the development server:
+## 🎮 Tentang Proyek
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Aplikasi ini mengajak pemain untuk merasakan pengalaman memasak hidangan tradisional melalui berbagai minigame seru. Tujuannya adalah untuk memberikan edukasi seputar proses pembuatan, bahan-bahan, dan keunikan kuliner khas Nusantara dengan cara yang menyenangkan.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Beberapa fitur dan minigame yang tersedia di dalam web ini antara lain:
+- **Pisang Asar Minigame**: Simulasi pembuatan hidangan khas, lengkap dengan interaksi alat dan bahan.
+- **Samaloyang Minigame**: Simulasi memasak dengan efek visual dan audio yang menarik.
+- **Suki Kuliner**: Game interaktif dengan mekanik interaksi *drop and merge* yang menantang.
+- **Papan Peringkat (Leaderboard)**: Sistem akumulasi skor untuk melacak pencapaian pemain dari berbagai level daerah.
+- **Admin Dashboard**: Panel manajemen untuk memantau aktivitas dan mengatur konten permainan.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Teknologi yang Digunakan
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Proyek ini dibangun menggunakan *stack* teknologi modern untuk memastikan pengalaman bermain yang lancar dan antarmuka pengguna yang memukau:
+- **Framework Utama**: [Next.js](https://nextjs.org/) (React)
+- **Bahasa Pemrograman**: TypeScript
+- **Styling**: Tailwind CSS
+- **Peta & Rute**: Google Maps JavaScript API (untuk rute interaktif)
 
-## Learn More
+## 🛠️ Cara Menjalankan Proyek secara Lokal
 
-To learn more about Next.js, take a look at the following resources:
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di perangkat Anda:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone Repositori**
+   ```bash
+   git clone <url-repositori-anda>
+   cd TransJogja
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Instalasi Dependensi**
+   Pastikan Anda memiliki Node.js terinstal. Jalankan perintah:
+   ```bash
+   npm install
+   # atau
+   yarn install
+   ```
 
-## Deploy on Vercel
+3. **Pengaturan Environment Variables**
+   Salin template environment dengan cara mengubah nama `.env.example` menjadi `.env.local`, lalu isi nilai yang dibutuhkan (seperti API Keys):
+   ```bash
+   cp .env.example .env.local
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Menjalankan Server Pengembangan (Development)**
+   Mulai jalankan proyek dengan perintah:
+   ```bash
+   npm run dev
+   # atau
+   yarn dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Membuka Aplikasi**
+   Buka browser Anda dan arahkan ke [http://localhost:3000](http://localhost:3000) untuk mulai bermain!
+
+## 🤝 Berkontribusi
+
+Kontribusi Anda sangat berharga bagi pengembangan game ini. Jika Anda menemukan *bug*, memiliki saran fitur baru, atau ingin ikut berkontribusi dalam kode, jangan ragu untuk membuka *Issue* atau mengirimkan *Pull Request*.
+
+---
+
+*Mari bermain, belajar, dan lestarikan kuliner khas Nusantara!* 🇮🇩
