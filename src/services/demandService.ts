@@ -43,7 +43,15 @@ export const halteList = [
 ];
 
 const HALTE_COUNT = halteList.length; // 34
-let dummyHalteData = Array(HALTE_COUNT).fill(0).map(() => Math.floor(Math.random() * 50) + 10);
+
+// Stable dummy data (no Math.random) — prevents hydration mismatch between server/client
+const dummyHalteData: number[] = [
+    42, 18, 25, 31, 12, 8, 19, 27, 35, 14,
+    22, 16, 38, 11, 29, 45, 17, 23, 33, 9,
+    20, 15, 41, 26, 13, 37, 10, 28, 44, 21,
+    16, 32, 7, 24,
+];
+
 
 export const demandService = {
     async getDemandByMonth(bulan: string | number, tahun: string | number): Promise<number[]> {
@@ -81,7 +89,7 @@ export const demandService = {
     async saveDemand(bulan: string | number, tahun: string | number, demandDataArray: number[]) {
         const firestoreDb = db;
         if (!firestoreDb) {
-            dummyHalteData = [...demandDataArray];
+            // When offline, just resolve without error — caller already updates local UI state
             return true;
         }
 

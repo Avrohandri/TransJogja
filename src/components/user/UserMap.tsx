@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -8,7 +8,7 @@ import { busLocationService, BusLocation } from "@/services/busLocationService";
 import { demandService } from "@/services/demandService";
 import { fetchRoadPolyline, RUTE_14_HALTE_COORDS, RUTE_14_GEOJSON_POLYLINE } from "@/utils/roadRoute";
 
-// Fix Leaflet marker icons
+// Fix Leaflet marker icons — done once at module level
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -16,29 +16,31 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// Custom Icons
+// ── Icons cached at module level — created once, not on every render ──────────
+const LEAFLET_SHADOW = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png';
+
 const busIcon = new L.Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448339.png',
   iconSize: [36, 36],
   iconAnchor: [18, 18],
-  popupAnchor: [0, -18]
+  popupAnchor: [0, -18],
 });
 
-const getHalteIcon = (demandVal: number) => {
-    let colorUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png';
-    if (demandVal > 30) colorUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png';
-    else if (demandVal > 15) colorUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png';
-    else if (demandVal > 0) colorUrl = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png';
-
-    return new L.Icon({
-        iconUrl: colorUrl,
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-    });
+const HALTE_ICONS = {
+  grey:  new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png',  shadowUrl: LEAFLET_SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+  red:   new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',   shadowUrl: LEAFLET_SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+  gold:  new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png',  shadowUrl: LEAFLET_SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+  green: new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png', shadowUrl: LEAFLET_SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
 };
+
+const getHalteIcon = (demandVal: number) => {
+    if (demandVal > 30) return HALTE_ICONS.red;
+    if (demandVal > 15) return HALTE_ICONS.gold;
+    if (demandVal > 0)  return HALTE_ICONS.green;
+    return HALTE_ICONS.grey;
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function LocateControl() {
     const map = useMap();
@@ -60,24 +62,29 @@ function LocateControl() {
     return null;
 }
 
+// Map center constant — outside component to avoid recreation
+const MAP_CENTER: [number, number] = [-7.7881, 110.4312];
+
 export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     const [haltes, setHaltes] = useState<Halte[]>([]);
     const [buses, setBuses] = useState<BusLocation[]>([]);
     const [demandData, setDemandData] = useState<number[]>([]);
-    // Road-following polyline coordinates fetched from OSRM
     const [roadPolyline, setRoadPolyline] = useState<[number, number][]>([]);
     const [routeLoading, setRouteLoading] = useState(true);
 
     useEffect(() => {
-        halteService.getHaltesByRoute("RUTE_14").then(setHaltes);
-
-        const today = new Date();
-        demandService.getDemandByMonth(today.getMonth() + 1, today.getFullYear()).then(setDemandData);
+        // Parallel fetches — faster initial load
+        Promise.all([
+            halteService.getHaltesByRoute("RUTE_14"),
+            demandService.getDemandByMonth(new Date().getMonth() + 1, new Date().getFullYear()),
+        ]).then(([haltesData, demand]) => {
+            setHaltes(haltesData);
+            setDemandData(demand);
+        });
 
         const unsub = busLocationService.subscribeLiveBuses("RUTE_14", setBuses);
 
-        // Fetch actual road geometry from OSRM using all 35 halte coordinates
-        setRouteLoading(true);
+        // Fetch road geometry
         fetchRoadPolyline(RUTE_14_HALTE_COORDS).then(coords => {
             setRoadPolyline(coords);
             setRouteLoading(false);
@@ -86,38 +93,40 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         return () => unsub();
     }, []);
 
-    // Center on first halte (Bandara Adisucipto)
-    const mapCenter: [number, number] = [-7.7881, 110.4312];
+    // Memoize polyline so it doesn't re-render when buses update
+    const routePolyline = useMemo(() => roadPolyline, [roadPolyline]);
 
     return (
         <MapContainer
-            center={mapCenter}
+            center={MAP_CENTER}
             zoom={13}
             style={{ height: "100%", width: "100%", zIndex: 0 }}
             zoomControl={false}
+            preferCanvas={true}
         >
             <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                maxZoom={19}
+                keepBuffer={4}
             />
 
             {/* Road-following polyline (from OSRM) — renders after fetch */}
-            {roadPolyline.length > 0 && (
+            {routePolyline.length > 0 && (
                 <>
                     {/* Outer glow / shadow line */}
                     <Polyline
-                        positions={roadPolyline}
+                        positions={routePolyline}
                         color="#004d40"
                         weight={10}
                         opacity={0.2}
                     />
                     {/* Main route line */}
                     <Polyline
-                        positions={roadPolyline}
+                        positions={routePolyline}
                         color="#006c49"
                         weight={5}
                         opacity={0.9}
-                        dashArray={undefined}
                     />
                 </>
             )}

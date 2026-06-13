@@ -1,14 +1,18 @@
 "use client";
 import dynamic from 'next/dynamic';
-
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { transactionService, Transaction } from '@/services/transactionService';
 import { demandService, halteList } from '@/services/demandService';
 import { authService } from '@/services/authService';
 
+// Dynamic import at module level — prevents remount on every parent render
+const UserMap = dynamic(() => import('@/components/user/UserMap'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full flex items-center justify-center bg-[#e0e3e5] text-[#3f4945]">Memuat Peta...</div>
+});
+
 export default function Dashboard() {
-  const UserMap = dynamic(() => import('@/components/user/UserMap'), { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center bg-[#e0e3e5] text-[#3f4945]">Memuat Peta...</div> });
   const router = useRouter();
   const [liveTransactions, setLiveTransactions] = useState<Transaction[]>([]);
   const [isTransactionsModalOpen, setIsTransactionsModalOpen] = useState(false);
