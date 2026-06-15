@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/authService";
 import Link from "next/link";
@@ -48,16 +48,6 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    const unsub = authService.onAuthStateChanged((user) => {
-      if (user) {
-        if (user.role === "admin") router.push("/admin");
-        else router.push("/user");
-      }
-    });
-    return () => unsub();
-  }, [router]);
 
   const switchMode = (next: "user" | "admin") => {
     if (next === mode || sliding) return;
