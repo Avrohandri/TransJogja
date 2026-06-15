@@ -80,13 +80,9 @@ export default function RouteDetailsPage() {
                 )}
 
                 {/* Top overlay: back + follow */}
-                <div className="absolute top-4 left-4 right-4 z-10 flex justify-between items-center pointer-events-none">
+                <div className="absolute top-4 left-4 right-4 z-10 flex justify-start items-center pointer-events-none">
                     <button onClick={() => router.back()} className="bg-white w-10 h-10 rounded-full shadow-md flex items-center justify-center text-[#00342b] pointer-events-auto border border-[#e0e3e5] hover:bg-[#f2f4f6] transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                    </button>
-                    <button className="bg-[#00342b] text-white px-4 py-2 rounded-full shadow-md text-sm font-bold pointer-events-auto flex items-center gap-1 hover:bg-[#004d3b] transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                        Follow
                     </button>
                 </div>
 
