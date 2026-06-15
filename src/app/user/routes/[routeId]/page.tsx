@@ -18,6 +18,7 @@ export default function RouteDetailsPage() {
     const [haltes, setHaltes] = useState<Halte[]>([]);
     const [mounted, setMounted] = useState(false);
     const [selectedSegmentIdx, setSelectedSegmentIdx] = useState<number | null>(null);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setMounted(true);
@@ -35,6 +36,18 @@ export default function RouteDetailsPage() {
             toCoord: [haltes[i + 1].latitude, haltes[i + 1].longitude] as [number, number],
         }));
     }, [haltes]);
+
+    // Filter segments based on search query
+    const filteredSegments = useMemo(() => {
+        if (!search.trim()) return segments.map((seg, idx) => ({ seg, originalIdx: idx }));
+        const q = search.toLowerCase();
+        return segments
+            .map((seg, idx) => ({ seg, originalIdx: idx }))
+            .filter(({ seg }) =>
+                seg.fromName.toLowerCase().includes(q) ||
+                seg.toName.toLowerCase().includes(q)
+            );
+    }, [segments, search]);
 
     const activeSegment = selectedSegmentIdx !== null ? segments[selectedSegmentIdx] : null;
 
@@ -140,21 +153,48 @@ export default function RouteDetailsPage() {
                         </div>
                     </button>
 
+                    {/* Search Bar */}
+                    <div className="relative mb-3">
+                        <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#707975] w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        <input
+                            type="text"
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                            placeholder="Cari nama halte..."
+                            className="w-full pl-9 pr-4 py-2.5 bg-[#f7f9fb] border border-[#e0e3e5] rounded-xl text-sm outline-none focus:border-[#006c49] focus:bg-white transition-colors"
+                        />
+                        {search && (
+                            <button
+                                onClick={() => setSearch("")}
+                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[#707975] hover:text-[#191c1e] transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                            </button>
+                        )}
+                    </div>
+
                     {/* Segment List Title */}
                     <div className="flex items-center gap-2 mb-3">
                         <div className="w-1 h-5 rounded-full bg-[#006c49]"></div>
                         <h3 className="font-bold text-sm text-[#191c1e]">Titik Antar Berurutan</h3>
-                        <span className="text-[10px] text-[#707975] bg-[#f2f4f6] px-2 py-0.5 rounded-full font-semibold">{segments.length} segmen</span>
+                        <span className="text-[10px] text-[#707975] bg-[#f2f4f6] px-2 py-0.5 rounded-full font-semibold">{filteredSegments.length} segmen</span>
                     </div>
 
                     {/* Segment List */}
+                    {/* Segment List */}
                     <div className="flex flex-col gap-2">
-                        {segments.map((seg, idx) => {
-                            const isActive = selectedSegmentIdx === idx;
+                        {filteredSegments.length === 0 && search.trim() && (
+                            <div className="text-center py-8 text-sm text-[#707975]">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="mx-auto mb-2 text-[#bfc9c4]"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                Halte &quot;{search}&quot; tidak ditemukan
+                            </div>
+                        )}
+                        {filteredSegments.map(({ seg, originalIdx }) => {
+                            const isActive = selectedSegmentIdx === originalIdx;
                             return (
                                 <button
-                                    key={idx}
-                                    onClick={() => handleSelectSegment(idx)}
+                                    key={originalIdx}
+                                    onClick={() => handleSelectSegment(originalIdx)}
                                     className={`w-full text-left p-3 rounded-xl border transition-all group relative overflow-hidden ${
                                         isActive
                                             ? 'bg-[#006c49]/5 border-[#006c49] shadow-md shadow-[#006c49]/10'
@@ -173,7 +213,7 @@ export default function RouteDetailsPage() {
                                                 ? 'bg-[#006c49] text-white'
                                                 : 'bg-[#f2f4f6] text-[#3f4945] group-hover:bg-[#e0e3e5]'
                                         }`}>
-                                            {idx + 1}
+                                            {originalIdx + 1}
                                         </div>
 
                                         {/* Segment info */}
@@ -199,10 +239,10 @@ export default function RouteDetailsPage() {
                                     </div>
 
                                     {/* First / Last labels */}
-                                    {idx === 0 && (
+                                    {originalIdx === 0 && (
                                         <span className="absolute top-1.5 right-2 text-[8px] text-[#006c49] font-bold bg-[#6cf8bb]/25 px-1.5 py-0.5 rounded">AWAL</span>
                                     )}
-                                    {idx === segments.length - 1 && (
+                                    {originalIdx === segments.length - 1 && (
                                         <span className="absolute top-1.5 right-2 text-[8px] text-[#ba1a1a] font-bold bg-[#ffdad6]/50 px-1.5 py-0.5 rounded">AKHIR</span>
                                     )}
                                 </button>
