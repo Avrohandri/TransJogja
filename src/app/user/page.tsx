@@ -48,7 +48,7 @@ export default function UserMainMapPage() {
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         </Link>
         
-        <Link href="/user/routes" className="bg-white text-[#191c1e] p-4 rounded-xl shadow-lg flex items-center justify-between pointer-events-auto border border-[#e0e3e5] hover:bg-[#f7f9fb] active:scale-[0.98] transition-all">
+        <Link href="/user/routes/RUTE_14" className="bg-white text-[#191c1e] p-4 rounded-xl shadow-lg flex items-center justify-between pointer-events-auto border border-[#e0e3e5] hover:bg-[#f7f9fb] active:scale-[0.98] transition-all">
           <div className="flex items-center gap-3">
             <div className="bg-[#f2f4f6] p-2 rounded-lg text-[#006c49]">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 6v6"/><path d="M15 6v14"/><path d="M18 6h-6"/><path d="M12 20H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-1"/><path d="M8 20v2"/></svg>
