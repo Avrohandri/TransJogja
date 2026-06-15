@@ -52,7 +52,7 @@ export default function LoginPage() {
   useEffect(() => {
     const unsub = authService.onAuthStateChanged((user) => {
       if (user) {
-        if (user.role === "admin") router.push("/");
+        if (user.role === "admin") router.push("/admin");
         else router.push("/user");
       }
     });
@@ -80,7 +80,7 @@ export default function LoginPage() {
         setIsLoading(false);
         return;
       }
-      if (user.role === "admin") router.push("/");
+      if (user.role === "admin") router.push("/admin");
       else router.push("/user");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Email atau password salah.");
