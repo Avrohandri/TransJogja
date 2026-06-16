@@ -261,9 +261,18 @@ export default function Dashboard() {
         {/* Right Column */}
         <div className="lg:col-span-7 flex flex-col">
           <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col relative overflow-hidden h-full">
-            <div className="mb-4 z-10 relative bg-white bg-opacity-90 p-2 rounded-lg inline-block w-max backdrop-blur-sm">
-              <h2 className="text-xl font-bold text-[#00342b]">Peta Rute</h2>
-              <p className="text-sm text-[#3f4945]">Visualisasi rute Trans Jogja berdasarkan halte aktif</p>
+            <div className="mb-4 z-10 relative flex items-start justify-between">
+              <div className="bg-white bg-opacity-90 p-2 rounded-lg inline-block w-max backdrop-blur-sm">
+                <h2 className="text-xl font-bold text-[#00342b]">Peta Rute</h2>
+                <p className="text-sm text-[#3f4945]">Visualisasi rute Trans Jogja berdasarkan halte aktif</p>
+              </div>
+              <button 
+                onClick={() => router.push("/admin/optimization")} 
+                className="flex items-center gap-2 px-4 py-2 bg-[#00342b] text-white text-[12px] font-semibold rounded-lg hover:bg-[#004d3b] transition-all shadow-sm"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Optimasi Halte
+              </button>
             </div>
             
             <div className="rounded-lg overflow-hidden relative bg-[#e0e3e5] flex-grow min-h-[400px]">
