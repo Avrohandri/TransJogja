@@ -67,15 +67,14 @@ export const RUTE_14_HALTE_COORDS: [number, number][] = [
 ];
 
 // ── Static GeoJSON LineString geometry for Rute 14 (one-way) ────────────────
-// Source: rute_14_adisucipto_ke_terminal_pakem_bersih.geojson
 // Used as fallback when OSRM is unreachable. [lat, lon] format for Leaflet.
+// Updated to match the corrected 34-halte RUTE_14_HALTE_COORDS list.
 export const RUTE_14_GEOJSON_POLYLINE: [number, number][] = [
     [-7.7845212, 110.4357106],
     [-7.7820541, 110.4297658],
     [-7.7693853, 110.4310562],
-    [-7.7678861, 110.4315421],
-    [-7.7833639, 110.4310201],
-    [-7.765633,  110.4315206],
+    [-7.7678861, 110.4313000],
+    [-7.765633,  110.4314000],
     [-7.7607143, 110.4328691],
     [-7.7554682, 110.433896 ],
     [-7.7504724, 110.4345757],
@@ -105,3 +104,16 @@ export const RUTE_14_GEOJSON_POLYLINE: [number, number][] = [
     [-7.669071,  110.4176697],
     [-7.6668401, 110.4201971],
 ];
+
+// ── Cluster definitions ───────────────────────────────────────────────────────
+// Index 17 = Simpang Pasar Jangkang — shared transit/boundary halte.
+// Cluster 1 : Simpang Pasar Jangkang → Terminal Pakem (indices 17–33)
+// Cluster 2 : TJ Bandara Adisucipto → Simpang Pasar Jangkang (indices 0–17)
+export const TRANSIT_HALTE_INDEX = 17; // Simpang Pasar Jangkang
+
+export const CLUSTER_1_HALTE_COORDS: [number, number][] =
+    RUTE_14_HALTE_COORDS.slice(17);          // 17 waypoints incl. transit
+
+export const CLUSTER_2_HALTE_COORDS: [number, number][] =
+    RUTE_14_HALTE_COORDS.slice(0, 18);       // 18 waypoints incl. transit
+
