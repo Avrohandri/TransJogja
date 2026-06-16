@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -74,6 +74,10 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     const [c1Loading,  setC1Loading]  = useState(true);
     const [c2Loading,  setC2Loading]  = useState(true);
 
+    // ── Gimmick animated bus ─────────────────────────────────────────
+    const [busProgress, setBusProgress] = useState(0);
+    const busPathRef = useRef<[number, number][]>([]);
+
     useEffect(() => {
         halteService.getHaltesByRoute("RUTE_14").then(setHaltes);
 
@@ -93,6 +97,48 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         return () => unsub();
     }, []);
 
+    // Inject CSS for gimmick bus pulse animation (once per mount)
+    useEffect(() => {
+        const styleId = 'bus-gimmick-style';
+        if (!document.getElementById(styleId)) {
+            const el = document.createElement('style');
+            el.id = styleId;
+            el.textContent = `
+                @keyframes busGimmickPulse {
+                    0%,100% { box-shadow:0 0 14px rgba(220,20,60,.75),0 3px 8px rgba(0,0,0,.35); transform:scale(1); }
+                    50%      { box-shadow:0 0 28px rgba(220,20,60,1),0 3px 10px rgba(0,0,0,.4); transform:scale(1.09); }
+                }
+                .bus-gimmick-dot {
+                    display:flex; align-items:center; justify-content:center;
+                    width:42px; height:42px;
+                    background:radial-gradient(circle at 40% 35%, #ff5c7a, #DC143C 65%, #8b0016);
+                    border-radius:50%; border:2.5px solid #fff;
+                    box-shadow:0 0 14px rgba(220,20,60,.75),0 3px 8px rgba(0,0,0,.35);
+                    font-size:22px;
+                    animation:busGimmickPulse 1.4s ease-in-out infinite;
+                }
+            `;
+            document.head.appendChild(el);
+        }
+        return () => { document.getElementById('bus-gimmick-style')?.remove(); };
+    }, []);
+
+    // Build full bus path: Terminal Pakem → Jangkang → TJ Adisucipto
+    useEffect(() => {
+        if (c1Polyline.length > 0 && c2Polyline.length > 0) {
+            busPathRef.current = [
+                ...[...c1Polyline].reverse(),   // Pakem → Jangkang
+                ...[...c2Polyline].reverse(),   // Jangkang → Adisucipto
+            ];
+        }
+    }, [c1Polyline, c2Polyline]);
+
+    // Tick bus progress every 80 ms — full loop ≈ 55 s
+    useEffect(() => {
+        const id = setInterval(() => setBusProgress(p => (p + 0.0015) % 1), 80);
+        return () => clearInterval(id);
+    }, []);
+
     // Memoised so polylines don't re-render on bus updates
     const poly1 = useMemo(() => c1Polyline, [c1Polyline]);
     const poly2 = useMemo(() => c2Polyline, [c2Polyline]);
@@ -100,6 +146,29 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     // Straight-line fallback segments while OSRM loads
     const fallback1 = useMemo(() => CLUSTER_1_HALTE_COORDS, []);
     const fallback2 = useMemo(() => CLUSTER_2_HALTE_COORDS, []);
+
+    // Interpolate gimmick bus lat/lng along full path
+    const busPosition = useMemo<[number, number] | null>(() => {
+        const path = busPathRef.current;
+        if (path.length < 2) return null;
+        const total = path.length - 1;
+        const exact = busProgress * total;
+        const lo    = Math.floor(exact);
+        const hi    = Math.min(lo + 1, total);
+        const t     = exact - lo;
+        return [
+            path[lo][0] + (path[hi][0] - path[lo][0]) * t,
+            path[lo][1] + (path[hi][1] - path[lo][1]) * t,
+        ];
+    }, [busProgress]);
+
+    // Ruby-red divIcon — created once
+    const gimmickBusIcon = useMemo(() => L.divIcon({
+        html: `<div class="bus-gimmick-dot">🚌</div>`,
+        className: '',
+        iconSize: [42, 42],
+        iconAnchor: [21, 21],
+    }), []);
 
     return (
         <MapContainer
@@ -196,6 +265,15 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                     </Popup>
                 </Marker>
             ))}
+
+            {/* ── Gimmick bus (Pakem → Adisucipto animation) ─────────── */}
+            {busPosition && (
+                <Marker
+                    position={busPosition}
+                    icon={gimmickBusIcon}
+                    interactive={false}
+                />
+            )}
 
             {!isDetail && <LocateControl />}
         </MapContainer>
