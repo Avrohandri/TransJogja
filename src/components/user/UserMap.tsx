@@ -184,9 +184,9 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         }
     }, [c1Polyline, c2Polyline]);
 
-    // Tick bus progress every 50 ms — extremely realistic slow speed
+    // Tick bus progress every 50 ms — extremely slow (approx 1 hour per loop)
     useEffect(() => {
-        const id = setInterval(() => setBusProgress(p => (p + 0.000025) % 1), 50);
+        const id = setInterval(() => setBusProgress(p => (p + 0.000015) % 1), 50);
         return () => clearInterval(id);
     }, []);
 
@@ -333,38 +333,102 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
             {bus1Pos && (
                 <Marker position={bus1Pos.pos} icon={gimmickBusIcon} interactive={true}>
                     <Popup>
-                        <div style={{ textAlign: 'center', minWidth: 140 }}>
-                            <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja (Simulasi)</strong><br/>
-                            {bus1Pos.halteIdx !== undefined ? (
-                                <span style={{ fontSize: 12, color: "#22c55e", fontWeight: "bold" }}>
-                                    Sedang berhenti di halte:<br/>
-                                    {haltes[bus1Pos.halteIdx]?.namaHalte || "Memuat..."}
+                        {bus1Pos.halteIdx !== undefined && haltes[bus1Pos.halteIdx] ? (
+                            <div style={{ minWidth: 180, textAlign: 'left' }}>
+                                <strong style={{ color: bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster1.line }}>
+                                    {bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus1Pos.halteIdx].namaHalte}
+                                </strong>
+                                <br />
+                                <span style={{ fontSize: 11, color: "#3f4945" }}>
+                                    Sedang berhenti di Halte #{haltes[bus1Pos.halteIdx].urutan}
                                 </span>
-                            ) : (
-                                <span style={{ fontSize: 12, color: "#707975" }}>
-                                    Sedang dalam perjalanan<br/>Arah: Simpang Jangkang
+                                <br />
+                                <span style={{
+                                    display: "inline-block",
+                                    marginTop: 4,
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    padding: "2px 8px",
+                                    borderRadius: 6,
+                                    background: (bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster1.line) + "22",
+                                    color: bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster1.line,
+                                }}>
+                                    {getClusterLabel(bus1Pos.halteIdx)}
                                 </span>
-                            )}
-                        </div>
+                            </div>
+                        ) : (
+                            <div style={{ minWidth: 180, textAlign: 'left' }}>
+                                <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja</strong>
+                                <br />
+                                <span style={{ fontSize: 11, color: "#3f4945" }}>
+                                    Sedang dalam perjalanan
+                                </span>
+                                <br />
+                                <span style={{
+                                    display: "inline-block",
+                                    marginTop: 4,
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    padding: "2px 8px",
+                                    borderRadius: 6,
+                                    background: "#DC143C22",
+                                    color: "#DC143C",
+                                }}>
+                                    Arah: Simpang Jangkang
+                                </span>
+                            </div>
+                        )}
                     </Popup>
                 </Marker>
             )}
             {bus2Pos && (
                 <Marker position={bus2Pos.pos} icon={gimmickBusIcon} interactive={true}>
                     <Popup>
-                        <div style={{ textAlign: 'center', minWidth: 140 }}>
-                            <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja (Simulasi)</strong><br/>
-                            {bus2Pos.halteIdx !== undefined ? (
-                                <span style={{ fontSize: 12, color: "#22c55e", fontWeight: "bold" }}>
-                                    Sedang berhenti di halte:<br/>
-                                    {haltes[bus2Pos.halteIdx]?.namaHalte || "Memuat..."}
+                        {bus2Pos.halteIdx !== undefined && haltes[bus2Pos.halteIdx] ? (
+                            <div style={{ minWidth: 180, textAlign: 'left' }}>
+                                <strong style={{ color: bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster2.line }}>
+                                    {bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus2Pos.halteIdx].namaHalte}
+                                </strong>
+                                <br />
+                                <span style={{ fontSize: 11, color: "#3f4945" }}>
+                                    Sedang berhenti di Halte #{haltes[bus2Pos.halteIdx].urutan}
                                 </span>
-                            ) : (
-                                <span style={{ fontSize: 12, color: "#707975" }}>
-                                    Sedang dalam perjalanan<br/>Arah: Simpang Jangkang
+                                <br />
+                                <span style={{
+                                    display: "inline-block",
+                                    marginTop: 4,
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    padding: "2px 8px",
+                                    borderRadius: 6,
+                                    background: (bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster2.line) + "22",
+                                    color: bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster2.line,
+                                }}>
+                                    {getClusterLabel(bus2Pos.halteIdx)}
                                 </span>
-                            )}
-                        </div>
+                            </div>
+                        ) : (
+                            <div style={{ minWidth: 180, textAlign: 'left' }}>
+                                <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja</strong>
+                                <br />
+                                <span style={{ fontSize: 11, color: "#3f4945" }}>
+                                    Sedang dalam perjalanan
+                                </span>
+                                <br />
+                                <span style={{
+                                    display: "inline-block",
+                                    marginTop: 4,
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    padding: "2px 8px",
+                                    borderRadius: 6,
+                                    background: "#DC143C22",
+                                    color: "#DC143C",
+                                }}>
+                                    Arah: Simpang Jangkang
+                                </span>
+                            </div>
+                        )}
                     </Popup>
                 </Marker>
             )}
