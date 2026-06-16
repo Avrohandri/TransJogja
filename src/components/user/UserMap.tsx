@@ -76,8 +76,8 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
 
     // ── Gimmick animated bus ─────────────────────────────────────────
     const [busProgress, setBusProgress] = useState(0);
-    const c1PathRef = useRef<[number, number][]>([]);
-    const c2PathRef = useRef<[number, number][]>([]);
+    const c1PathRef = useRef<{ pos: [number, number], halteIdx?: number }[]>([]);
+    const c2PathRef = useRef<{ pos: [number, number], halteIdx?: number }[]>([]);
 
     useEffect(() => {
         halteService.getHaltesByRoute("RUTE_14").then(setHaltes);
@@ -139,31 +139,33 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     useEffect(() => {
         const buildPathWithStops = (
             polyLine: [number, number][],
-            haltes: [number, number][]
+            haltes: [number, number][],
+            halteIndices: number[]
         ) => {
-            const path: [number, number][] = [];
+            const path: { pos: [number, number], halteIdx?: number }[] = [];
             
             // Precompute closest polyline index for each halte to act as a "stop"
-            const stopIndices = new Set<number>();
-            for (const h of haltes) {
+            const stopIndices = new Map<number, number>(); // polyIdx -> globalHalteIdx
+            for (let i = 0; i < haltes.length; i++) {
+                const h = haltes[i];
                 let min = Infinity;
-                let idx = 0;
-                for (let i = 0; i < polyLine.length; i++) {
-                    const d = (polyLine[i][0] - h[0]) ** 2 + (polyLine[i][1] - h[1]) ** 2;
-                    if (d < min) { min = d; idx = i; }
+                let polyIdx = 0;
+                for (let j = 0; j < polyLine.length; j++) {
+                    const d = (polyLine[j][0] - h[0]) ** 2 + (polyLine[j][1] - h[1]) ** 2;
+                    if (d < min) { min = d; polyIdx = j; }
                 }
-                stopIndices.add(idx);
+                stopIndices.set(polyIdx, halteIndices[i]);
             }
 
             // Number of duplicated frames per stop (~2 seconds stop)
-            const PAUSE_FRAMES = 25; 
+            const PAUSE_FRAMES = 35; 
 
             for (let i = 0; i < polyLine.length; i++) {
-                path.push(polyLine[i]);
+                path.push({ pos: polyLine[i] });
                 if (stopIndices.has(i)) {
                     // Duplicate the coordinate to make the bus pause here
                     for (let p = 0; p < PAUSE_FRAMES; p++) {
-                        path.push(polyLine[i]);
+                        path.push({ pos: polyLine[i], halteIdx: stopIndices.get(i) });
                     }
                 }
             }
@@ -171,16 +173,20 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         };
 
         if (c1Polyline.length > 0) {
-            c1PathRef.current = buildPathWithStops([...c1Polyline].reverse(), [...CLUSTER_1_HALTE_COORDS].reverse());
+            // Cluster 1 (reversed): Pakem -> Jangkang (indices 33 down to 17)
+            const c1Indices = Array.from({length: 17}, (_, i) => 33 - i);
+            c1PathRef.current = buildPathWithStops([...c1Polyline].reverse(), [...CLUSTER_1_HALTE_COORDS].reverse(), c1Indices);
         }
         if (c2Polyline.length > 0) {
-            c2PathRef.current = buildPathWithStops(c2Polyline, CLUSTER_2_HALTE_COORDS);
+            // Cluster 2: Adisucipto -> Jangkang (indices 0 to 17)
+            const c2Indices = Array.from({length: 18}, (_, i) => i);
+            c2PathRef.current = buildPathWithStops(c2Polyline, CLUSTER_2_HALTE_COORDS, c2Indices);
         }
     }, [c1Polyline, c2Polyline]);
 
-    // Tick bus progress every 50 ms — realistic slow speed
+    // Tick bus progress every 50 ms — extremely realistic slow speed
     useEffect(() => {
-        const id = setInterval(() => setBusProgress(p => (p + 0.00008) % 1), 50);
+        const id = setInterval(() => setBusProgress(p => (p + 0.000025) % 1), 50);
         return () => clearInterval(id);
     }, []);
 
@@ -193,24 +199,30 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     const fallback2 = useMemo(() => CLUSTER_2_HALTE_COORDS, []);
 
     // Interpolate gimmick buses lat/lng
-    const bus1Pos = useMemo<[number, number] | null>(() => {
+    const bus1Pos = useMemo<{ pos: [number, number], halteIdx?: number } | null>(() => {
         const path = c1PathRef.current;
         if (path.length < 2) return null;
         const exact = busProgress * (path.length - 1);
         const lo = Math.floor(exact);
         const hi = Math.min(lo + 1, path.length - 1);
         const t = exact - lo;
-        return [ path[lo][0] + (path[hi][0] - path[lo][0]) * t, path[lo][1] + (path[hi][1] - path[lo][1]) * t ];
+        return {
+            pos: [ path[lo].pos[0] + (path[hi].pos[0] - path[lo].pos[0]) * t, path[lo].pos[1] + (path[hi].pos[1] - path[lo].pos[1]) * t ],
+            halteIdx: path[lo].halteIdx
+        };
     }, [busProgress]);
 
-    const bus2Pos = useMemo<[number, number] | null>(() => {
+    const bus2Pos = useMemo<{ pos: [number, number], halteIdx?: number } | null>(() => {
         const path = c2PathRef.current;
         if (path.length < 2) return null;
         const exact = busProgress * (path.length - 1);
         const lo = Math.floor(exact);
         const hi = Math.min(lo + 1, path.length - 1);
         const t = exact - lo;
-        return [ path[lo][0] + (path[hi][0] - path[lo][0]) * t, path[lo][1] + (path[hi][1] - path[lo][1]) * t ];
+        return {
+            pos: [ path[lo].pos[0] + (path[hi].pos[0] - path[lo].pos[0]) * t, path[lo].pos[1] + (path[hi].pos[1] - path[lo].pos[1]) * t ],
+            halteIdx: path[lo].halteIdx
+        };
     }, [busProgress]);
 
     // Ruby-red custom mask divIcon — created once
@@ -319,10 +331,42 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
 
             {/* ── Gimmick buses (Cluster 1 & 2 towards Jangkang) ─────────── */}
             {bus1Pos && (
-                <Marker position={bus1Pos} icon={gimmickBusIcon} interactive={false} />
+                <Marker position={bus1Pos.pos} icon={gimmickBusIcon} interactive={true}>
+                    <Popup>
+                        <div style={{ textAlign: 'center', minWidth: 140 }}>
+                            <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja (Simulasi)</strong><br/>
+                            {bus1Pos.halteIdx !== undefined ? (
+                                <span style={{ fontSize: 12, color: "#22c55e", fontWeight: "bold" }}>
+                                    Sedang berhenti di halte:<br/>
+                                    {haltes[bus1Pos.halteIdx]?.namaHalte || "Memuat..."}
+                                </span>
+                            ) : (
+                                <span style={{ fontSize: 12, color: "#707975" }}>
+                                    Sedang dalam perjalanan<br/>Arah: Simpang Jangkang
+                                </span>
+                            )}
+                        </div>
+                    </Popup>
+                </Marker>
             )}
             {bus2Pos && (
-                <Marker position={bus2Pos} icon={gimmickBusIcon} interactive={false} />
+                <Marker position={bus2Pos.pos} icon={gimmickBusIcon} interactive={true}>
+                    <Popup>
+                        <div style={{ textAlign: 'center', minWidth: 140 }}>
+                            <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja (Simulasi)</strong><br/>
+                            {bus2Pos.halteIdx !== undefined ? (
+                                <span style={{ fontSize: 12, color: "#22c55e", fontWeight: "bold" }}>
+                                    Sedang berhenti di halte:<br/>
+                                    {haltes[bus2Pos.halteIdx]?.namaHalte || "Memuat..."}
+                                </span>
+                            ) : (
+                                <span style={{ fontSize: 12, color: "#707975" }}>
+                                    Sedang dalam perjalanan<br/>Arah: Simpang Jangkang
+                                </span>
+                            )}
+                        </div>
+                    </Popup>
+                </Marker>
             )}
 
             {!isDetail && <LocateControl />}
