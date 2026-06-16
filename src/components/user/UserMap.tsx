@@ -135,19 +135,52 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         return () => { document.getElementById('bus-gimmick-style')?.remove(); };
     }, []);
 
-    // Build bus paths
+    // Build bus paths with simulated stops
     useEffect(() => {
+        const buildPathWithStops = (
+            polyLine: [number, number][],
+            haltes: [number, number][]
+        ) => {
+            const path: [number, number][] = [];
+            
+            // Precompute closest polyline index for each halte to act as a "stop"
+            const stopIndices = new Set<number>();
+            for (const h of haltes) {
+                let min = Infinity;
+                let idx = 0;
+                for (let i = 0; i < polyLine.length; i++) {
+                    const d = (polyLine[i][0] - h[0]) ** 2 + (polyLine[i][1] - h[1]) ** 2;
+                    if (d < min) { min = d; idx = i; }
+                }
+                stopIndices.add(idx);
+            }
+
+            // Number of duplicated frames per stop (~2 seconds stop)
+            const PAUSE_FRAMES = 25; 
+
+            for (let i = 0; i < polyLine.length; i++) {
+                path.push(polyLine[i]);
+                if (stopIndices.has(i)) {
+                    // Duplicate the coordinate to make the bus pause here
+                    for (let p = 0; p < PAUSE_FRAMES; p++) {
+                        path.push(polyLine[i]);
+                    }
+                }
+            }
+            return path;
+        };
+
         if (c1Polyline.length > 0) {
-            c1PathRef.current = [...c1Polyline].reverse(); // Pakem → Jangkang
+            c1PathRef.current = buildPathWithStops([...c1Polyline].reverse(), [...CLUSTER_1_HALTE_COORDS].reverse());
         }
         if (c2Polyline.length > 0) {
-            c2PathRef.current = [...c2Polyline];           // Adisucipto → Jangkang
+            c2PathRef.current = buildPathWithStops(c2Polyline, CLUSTER_2_HALTE_COORDS);
         }
     }, [c1Polyline, c2Polyline]);
 
-    // Tick bus progress every 80 ms — speed slowed down (normal speed)
+    // Tick bus progress every 50 ms — realistic slow speed
     useEffect(() => {
-        const id = setInterval(() => setBusProgress(p => (p + 0.0003) % 1), 80);
+        const id = setInterval(() => setBusProgress(p => (p + 0.00008) % 1), 50);
         return () => clearInterval(id);
     }, []);
 
