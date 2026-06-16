@@ -32,24 +32,23 @@ export const halteList = [
     "SDN Selomulyo",                     // 25
     "RSU Gramedika",                     // 26
     "Simpang Besi Jangkang",             // 27
-    // Segmen 4 — Halte 27–34
+    // Segmen 4 — Halte 27–33
     "Pusat Rehabilitasi YAKKUM",         // 28
     "Boulevard UII",                     // 29
     "Simpang Degolan",                   // 30
     "Dusun Kledokan (Soto Brakot)",      // 31
-    "RS Panti Nugroho",                  // 32
-    "SMPN 4 Pakem",                      // 33
-    "Terminal Pakem",                    // 34
+    "SMPN 4 Pakem",                      // 32
+    "Terminal Pakem",                    // 33
 ];
 
-const HALTE_COUNT = halteList.length; // 34
+const HALTE_COUNT = halteList.length; // 33
 
 // Stable dummy data (no Math.random) — prevents hydration mismatch between server/client
 const dummyHalteData: number[] = [
     42, 18, 25, 31, 12, 8, 19, 27, 35, 14,
     22, 16, 38, 11, 29, 45, 17, 23, 33, 9,
     20, 15, 41, 26, 13, 37, 10, 28, 44, 21,
-    16, 32, 7, 24,
+    16, 32, 7,
 ];
 
 
