@@ -76,7 +76,8 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
 
     // ── Gimmick animated bus ─────────────────────────────────────────
     const [busProgress, setBusProgress] = useState(0);
-    const busPathRef = useRef<[number, number][]>([]);
+    const c1PathRef = useRef<[number, number][]>([]);
+    const c2PathRef = useRef<[number, number][]>([]);
 
     useEffect(() => {
         halteService.getHaltesByRoute("RUTE_14").then(setHaltes);
@@ -110,12 +111,23 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 }
                 .bus-gimmick-dot {
                     display:flex; align-items:center; justify-content:center;
-                    width:42px; height:42px;
-                    background:radial-gradient(circle at 40% 35%, #ff5c7a, #DC143C 65%, #8b0016);
-                    border-radius:50%; border:2.5px solid #fff;
+                    width:38px; height:38px;
+                    background-color: white;
+                    border-radius:50%; border:3px solid #DC143C;
                     box-shadow:0 0 14px rgba(220,20,60,.75),0 3px 8px rgba(0,0,0,.35);
-                    font-size:22px;
                     animation:busGimmickPulse 1.4s ease-in-out infinite;
+                }
+                .bus-icon-mask {
+                    width: 22px; height: 22px;
+                    background-color: #DC143C;
+                    mask-image: url('/gambar/icon%20bis.png');
+                    mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    -webkit-mask-image: url('/gambar/icon%20bis.png');
+                    -webkit-mask-size: contain;
+                    -webkit-mask-repeat: no-repeat;
+                    -webkit-mask-position: center;
                 }
             `;
             document.head.appendChild(el);
@@ -123,19 +135,19 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
         return () => { document.getElementById('bus-gimmick-style')?.remove(); };
     }, []);
 
-    // Build full bus path: Terminal Pakem → Jangkang → TJ Adisucipto
+    // Build bus paths
     useEffect(() => {
-        if (c1Polyline.length > 0 && c2Polyline.length > 0) {
-            busPathRef.current = [
-                ...[...c1Polyline].reverse(),   // Pakem → Jangkang
-                ...[...c2Polyline].reverse(),   // Jangkang → Adisucipto
-            ];
+        if (c1Polyline.length > 0) {
+            c1PathRef.current = [...c1Polyline].reverse(); // Pakem → Jangkang
+        }
+        if (c2Polyline.length > 0) {
+            c2PathRef.current = [...c2Polyline];           // Adisucipto → Jangkang
         }
     }, [c1Polyline, c2Polyline]);
 
-    // Tick bus progress every 80 ms — full loop ≈ 55 s
+    // Tick bus progress every 80 ms — speed slowed down (normal speed)
     useEffect(() => {
-        const id = setInterval(() => setBusProgress(p => (p + 0.0015) % 1), 80);
+        const id = setInterval(() => setBusProgress(p => (p + 0.0003) % 1), 80);
         return () => clearInterval(id);
     }, []);
 
@@ -147,27 +159,33 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
     const fallback1 = useMemo(() => CLUSTER_1_HALTE_COORDS, []);
     const fallback2 = useMemo(() => CLUSTER_2_HALTE_COORDS, []);
 
-    // Interpolate gimmick bus lat/lng along full path
-    const busPosition = useMemo<[number, number] | null>(() => {
-        const path = busPathRef.current;
+    // Interpolate gimmick buses lat/lng
+    const bus1Pos = useMemo<[number, number] | null>(() => {
+        const path = c1PathRef.current;
         if (path.length < 2) return null;
-        const total = path.length - 1;
-        const exact = busProgress * total;
-        const lo    = Math.floor(exact);
-        const hi    = Math.min(lo + 1, total);
-        const t     = exact - lo;
-        return [
-            path[lo][0] + (path[hi][0] - path[lo][0]) * t,
-            path[lo][1] + (path[hi][1] - path[lo][1]) * t,
-        ];
+        const exact = busProgress * (path.length - 1);
+        const lo = Math.floor(exact);
+        const hi = Math.min(lo + 1, path.length - 1);
+        const t = exact - lo;
+        return [ path[lo][0] + (path[hi][0] - path[lo][0]) * t, path[lo][1] + (path[hi][1] - path[lo][1]) * t ];
     }, [busProgress]);
 
-    // Ruby-red divIcon — created once
+    const bus2Pos = useMemo<[number, number] | null>(() => {
+        const path = c2PathRef.current;
+        if (path.length < 2) return null;
+        const exact = busProgress * (path.length - 1);
+        const lo = Math.floor(exact);
+        const hi = Math.min(lo + 1, path.length - 1);
+        const t = exact - lo;
+        return [ path[lo][0] + (path[hi][0] - path[lo][0]) * t, path[lo][1] + (path[hi][1] - path[lo][1]) * t ];
+    }, [busProgress]);
+
+    // Ruby-red custom mask divIcon — created once
     const gimmickBusIcon = useMemo(() => L.divIcon({
-        html: `<div class="bus-gimmick-dot">🚌</div>`,
+        html: `<div class="bus-gimmick-dot"><div class="bus-icon-mask"></div></div>`,
         className: '',
-        iconSize: [42, 42],
-        iconAnchor: [21, 21],
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
     }), []);
 
     return (
@@ -266,13 +284,12 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 </Marker>
             ))}
 
-            {/* ── Gimmick bus (Pakem → Adisucipto animation) ─────────── */}
-            {busPosition && (
-                <Marker
-                    position={busPosition}
-                    icon={gimmickBusIcon}
-                    interactive={false}
-                />
+            {/* ── Gimmick buses (Cluster 1 & 2 towards Jangkang) ─────────── */}
+            {bus1Pos && (
+                <Marker position={bus1Pos} icon={gimmickBusIcon} interactive={false} />
+            )}
+            {bus2Pos && (
+                <Marker position={bus2Pos} icon={gimmickBusIcon} interactive={false} />
             )}
 
             {!isDetail && <LocateControl />}
