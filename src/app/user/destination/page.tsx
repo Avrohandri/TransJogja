@@ -77,9 +77,9 @@ export default function DestinationSearchPage() {
     };
 
     const clusterFilterBtns: { key: ClusterFilter; label: string; color: string; activeColor: string }[] = [
-        { key: "cluster2", label: "Cluster 2", color: "#22c55e", activeColor: "#e8faf0" },
         { key: "all",      label: "Semua",     color: "#707975", activeColor: "#f2f4f6" },
         { key: "cluster1", label: "Cluster 1", color: "#2980d9", activeColor: "#e8f2fb" },
+        { key: "cluster2", label: "Cluster 2", color: "#22c55e", activeColor: "#e8faf0" },
     ];
 
     return (
