@@ -335,12 +335,13 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                     <Popup>
                         {bus1Pos.halteIdx !== undefined && haltes[bus1Pos.halteIdx] ? (
                             <div style={{ minWidth: 180, textAlign: 'left' }}>
-                                <strong style={{ color: bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster1.line }}>
-                                    {bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus1Pos.halteIdx].namaHalte}
-                                </strong>
+                                <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja</strong>
                                 <br />
                                 <span style={{ fontSize: 11, color: "#3f4945" }}>
-                                    Sedang berhenti di Halte #{haltes[bus1Pos.halteIdx].urutan}
+                                    Sedang berhenti di:<br />
+                                    <span style={{ color: bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster1.line, fontWeight: 600 }}>
+                                        {bus1Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus1Pos.halteIdx].namaHalte}
+                                    </span>
                                 </span>
                                 <br />
                                 <span style={{
@@ -386,12 +387,13 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                     <Popup>
                         {bus2Pos.halteIdx !== undefined && haltes[bus2Pos.halteIdx] ? (
                             <div style={{ minWidth: 180, textAlign: 'left' }}>
-                                <strong style={{ color: bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster2.line }}>
-                                    {bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus2Pos.halteIdx].namaHalte}
-                                </strong>
+                                <strong style={{ color: "#DC143C" }}>🚌 Bus TransJogja</strong>
                                 <br />
                                 <span style={{ fontSize: 11, color: "#3f4945" }}>
-                                    Sedang berhenti di Halte #{haltes[bus2Pos.halteIdx].urutan}
+                                    Sedang berhenti di:<br />
+                                    <span style={{ color: bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.transit.line : CLUSTER_COLORS.cluster2.line, fontWeight: 600 }}>
+                                        {bus2Pos.halteIdx === TRANSIT_HALTE_INDEX ? "🔀 " : ""}{haltes[bus2Pos.halteIdx].namaHalte}
+                                    </span>
                                 </span>
                                 <br />
                                 <span style={{
