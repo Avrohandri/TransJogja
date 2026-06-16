@@ -107,7 +107,7 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
             zoom={12}
             style={{ height: "100%", width: "100%", zIndex: 0 }}
             zoomControl={false}
-            preferCanvas={true}
+            preferCanvas={false}
         >
             <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
