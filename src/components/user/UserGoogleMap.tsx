@@ -61,7 +61,7 @@ const ROUTE_SEGMENTS: {
         ],
     },
     {
-        // Segment 4 — Halte 27–34
+        // Segment 4 — Halte 27–33
         origin: "Simpang Besi Jangkang",
         destination: "Terminal Pakem",
         waypoints: [
@@ -69,7 +69,6 @@ const ROUTE_SEGMENTS: {
             "Boulevard UII",
             "Simpang Degolan",
             "Dusun Kledokan Soto Brakot",
-            "RS Panti Nugroho",
             "SMPN 4 Pakem",
         ],
     },
