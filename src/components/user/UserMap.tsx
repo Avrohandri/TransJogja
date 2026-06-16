@@ -21,14 +21,14 @@ L.Icon.Default.mergeOptions({
 });
 
 // ── Cluster colour palette ────────────────────────────────────────────────────
-// Cluster 1 (Simpang Pasar Jangkang → Terminal Pakem) : Orange
-// Cluster 2 (TJ Adisucipto → Simpang Pasar Jangkang) : Green (brand colour)
-// Transit   (Simpang Pasar Jangkang)                  : Violet
+// Cluster 1 (Simpang Pasar Jangkang → Terminal Pakem) : Medium-light Blue
+// Cluster 2 (TJ Adisucipto → Simpang Pasar Jangkang) : Lighter Green
+// Transit   (Simpang Pasar Jangkang)                  : Soft Amber-Yellow
 
 export const CLUSTER_COLORS = {
-  cluster1: { line: "#f97316", glow: "#c2410c" },   // orange
-  cluster2: { line: "#006c49", glow: "#004d40" },   // brand green
-  transit:  { line: "#7c3aed", glow: "#5b21b6" },   // violet
+  cluster1: { line: "#2980d9", glow: "#1a5fa8" },   // medium-light blue
+  cluster2: { line: "#22c55e", glow: "#15803d" },   // lighter green
+  transit:  { line: "#f59e0b", glow: "#d97706" },   // soft amber-yellow
 };
 
 const SHADOW = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png';
@@ -41,9 +41,9 @@ const busIcon = new L.Icon({
 
 // Solid cluster icons — no demand-based colouring
 const HALTE_ICONS = {
-  cluster1: new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-orange.png`, shadowUrl: SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
+  cluster1: new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-blue.png`,   shadowUrl: SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
   cluster2: new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-green.png`,  shadowUrl: SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
-  transit:  new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-violet.png`, shadowUrl: SHADOW, iconSize: [30, 49], iconAnchor: [15, 49], popupAnchor: [1, -42], shadowSize: [41, 41] }),
+  transit:  new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-gold.png`,   shadowUrl: SHADOW, iconSize: [30, 49], iconAnchor: [15, 49], popupAnchor: [1, -42], shadowSize: [41, 41] }),
 };
 
 /** Returns the cluster icon for a given halte array-index (0-based). */
