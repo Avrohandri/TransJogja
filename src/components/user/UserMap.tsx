@@ -152,6 +152,7 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                         center={[halte.latitude, halte.longitude]}
                         radius={isTransit ? 10 : 7}
                         pathOptions={{
+                            pane: "markerPane",
                             color: "#ffffff",
                             fillColor: clusterColor,
                             fillOpacity: 1,
