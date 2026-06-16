@@ -62,9 +62,8 @@ export const RUTE_14_HALTE_COORDS: [number, number][] = [
     [-7.6872834, 110.4187258],  // 29. Boulevard UII
     [-7.6840524, 110.4191124],  // 30. Simpang Degolan
     [-7.6725689, 110.4173174],  // 31. Dusun Kledokan (Soto Brakot)
-    [-7.669172,  110.4175705],  // 32. RS Panti Nugroho
-    [-7.669071,  110.4176697],  // 33. SMPN 4 Pakem
-    [-7.6668401, 110.4201971],  // 34. Terminal Pakem
+    [-7.669071,  110.4176697],  // 32. SMPN 4 Pakem
+    [-7.6668401, 110.4201971],  // 33. Terminal Pakem
 ];
 
 // ── Static GeoJSON LineString geometry for Rute 14 (one-way) ────────────────
@@ -103,7 +102,6 @@ export const RUTE_14_GEOJSON_POLYLINE: [number, number][] = [
     [-7.6872834, 110.4187258],
     [-7.6840524, 110.4191124],
     [-7.6725689, 110.4173174],
-    [-7.669172,  110.4175705],
     [-7.669071,  110.4176697],
     [-7.6668401, 110.4201971],
 ];
