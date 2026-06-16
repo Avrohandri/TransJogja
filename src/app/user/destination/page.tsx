@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { halteService, Halte } from "@/services/halteService";
-import { calculateDistanceKm } from "@/utils/distance";
 
 // ── Cluster constants (mirrors roadRoute.ts TRANSIT_HALTE_INDEX = 17, urutan 18) ──
 const TRANSIT_URUTAN = 18; // Simpang Pasar Jangkang
