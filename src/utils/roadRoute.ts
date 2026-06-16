@@ -35,7 +35,7 @@ export const RUTE_14_HALTE_COORDS: [number, number][] = [
     [-7.7820541, 110.4297658],  //  2. Kantor Kesehatan Pelabuhan Yogya
     [-7.7693853, 110.4310562],  //  3. TJ RRU Disnaker
     [-7.7678861, 110.4315421],  //  4. Disnakertrans DI Yogyakarta
-    [-7.765633,  110.4315206],  //  5. SMKN 1 Depok
+    [-7.765633,  110.4307000],  //  5. SMKN 1 Depok
     [-7.7607143, 110.4328691],  //  6. SDN 1 Depok
     [-7.7554682, 110.433896 ],  //  7. Kantor Urusan Agama Depok
     [-7.7504724, 110.4345757],  //  8. MAN 2 Sleman
