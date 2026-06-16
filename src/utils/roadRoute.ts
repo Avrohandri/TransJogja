@@ -58,7 +58,7 @@ export const RUTE_14_HALTE_COORDS: [number, number][] = [
     [-7.7023223, 110.4205566],  // 25. SDN Selomulyo
     [-7.7011276, 110.4169564],  // 26. RSU Gramedika
     [-7.6998515, 110.4155216],  // 27. Simpang Besi Jangkang
-    [-7.6955859, 110.4179513],  // 28. Pusat Rehabilitasi YAKKUM
+    [-7.6955859, 110.4180513],  // 28. Pusat Rehabilitasi YAKKUM
     [-7.6872834, 110.4187258],  // 29. Boulevard UII
     [-7.6840524, 110.4191124],  // 30. Simpang Degolan
     [-7.6725689, 110.4173174],  // 31. Dusun Kledokan (Soto Brakot)
@@ -99,7 +99,7 @@ export const RUTE_14_GEOJSON_POLYLINE: [number, number][] = [
     [-7.7023223, 110.4205566],
     [-7.7011276, 110.4169564],
     [-7.6998515, 110.4155216],
-    [-7.6955859, 110.4179513],
+    [-7.6955859, 110.4180513],
     [-7.6872834, 110.4187258],
     [-7.6840524, 110.4191124],
     [-7.6725689, 110.4173174],
