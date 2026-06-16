@@ -23,11 +23,12 @@ function getHalteType(urutan: number): "transit" | "cluster1" | "cluster2" {
 
 export default function DestinationSearchPage() {
     const router = useRouter();
-    const [haltes, setHaltes]           = useState<Halte[]>([]);
-    const [fromHalte, setFromHalte]     = useState<Halte | null>(null);
-    const [toHalte, setToHalte]         = useState<Halte | null>(null);
-    const [search, setSearch]           = useState("");
-    const [focusField, setFocusField]   = useState<"from" | "to">("to");
+    const [haltes, setHaltes]               = useState<Halte[]>([]);
+    const [fromHalte, setFromHalte]         = useState<Halte | null>(null);
+    const [toHalte, setToHalte]             = useState<Halte | null>(null);
+    const [fromSearch, setFromSearch]       = useState("");
+    const [toSearch, setToSearch]           = useState("");
+    const [focusField, setFocusField]       = useState<"from" | "to">("to");
     const [clusterFilter, setClusterFilter] = useState<ClusterFilter>("all");
 
     useEffect(() => {
@@ -49,7 +50,10 @@ export default function DestinationSearchPage() {
         });
     }, []);
 
-    // Filter by cluster, then by search
+    // Active search text — depends on which field is focused
+    const activeSearch = focusField === "from" ? fromSearch : toSearch;
+
+    // Filter by cluster, then by active search
     const haltesByCluster = haltes.filter(h => {
         const type = getHalteType(h.urutan);
         if (clusterFilter === "cluster1") return type === "cluster1" || type === "transit";
@@ -57,19 +61,33 @@ export default function DestinationSearchPage() {
         return true;
     });
     const filteredHaltes = haltesByCluster.filter(h =>
-        h.namaHalte.toLowerCase().includes(search.toLowerCase())
+        h.namaHalte.toLowerCase().includes(activeSearch.toLowerCase())
     );
 
     const handleSelectHalte = (h: Halte) => {
         if (focusField === "from") {
             setFromHalte(h);
+            setFromSearch(h.namaHalte);
+            setToSearch("");           // clear to-field so list opens fresh
             setFocusField("to");
         } else {
             setToHalte(h);
+            setToSearch(h.namaHalte);
             if (fromHalte && h) {
                 router.push(`/user/estimate?from=${fromHalte.halteId}&to=${h.halteId}`);
             }
         }
+    };
+
+    const handleFocusFrom = () => {
+        setFocusField("from");
+        // Pre-fill with current value so user can edit it
+        setFromSearch(fromHalte?.namaHalte || "");
+    };
+
+    const handleFocusTo = () => {
+        setFocusField("to");
+        setToSearch(toHalte?.namaHalte || "");
     };
 
     const clusterFilterBtns: { key: ClusterFilter; label: string; color: string; activeColor: string }[] = [
@@ -100,12 +118,13 @@ export default function DestinationSearchPage() {
                     {/* FROM */}
                     <div className="flex items-center gap-3 relative z-10">
                         <div className="w-4 h-4 rounded-full border-[4px] border-[#006c49] bg-white flex-shrink-0"></div>
-                        <div className="flex-1 bg-[#f2f4f6] rounded-lg px-3 py-2 flex items-center" onClick={() => setFocusField("from")}>
+                        <div className="flex-1 bg-[#f2f4f6] rounded-lg px-3 py-2 flex items-center">
                             <input
                                 type="text"
-                                value={fromHalte?.namaHalte || ""}
-                                readOnly
-                                placeholder="Pilih Halte Awal"
+                                value={focusField === "from" ? fromSearch : (fromHalte?.namaHalte || "")}
+                                onFocus={handleFocusFrom}
+                                onChange={e => { if (focusField === "from") setFromSearch(e.target.value); }}
+                                placeholder="Cari Halte Awal..."
                                 className={`bg-transparent outline-none w-full text-sm font-semibold ${focusField === "from" ? "text-[#006c49]" : "text-[#191c1e]"}`}
                             />
                         </div>
@@ -116,11 +135,12 @@ export default function DestinationSearchPage() {
                         <div className="w-4 h-4 rounded-full bg-[#ba1a1a] flex-shrink-0 flex items-center justify-center">
                             <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
                         </div>
-                        <div className="flex-1 bg-[#f2f4f6] rounded-lg px-3 py-2 flex items-center" onClick={() => setFocusField("to")}>
+                        <div className="flex-1 bg-[#f2f4f6] rounded-lg px-3 py-2 flex items-center">
                             <input
                                 type="text"
-                                value={focusField === "to" ? search : (toHalte?.namaHalte || "")}
-                                onChange={e => { if (focusField === "to") setSearch(e.target.value); }}
+                                value={focusField === "to" ? toSearch : (toHalte?.namaHalte || "")}
+                                onFocus={handleFocusTo}
+                                onChange={e => { if (focusField === "to") setToSearch(e.target.value); }}
                                 placeholder="Cari Halte Tujuan..."
                                 className={`bg-transparent outline-none w-full text-sm font-semibold ${focusField === "to" ? "text-[#ba1a1a]" : "text-[#191c1e]"}`}
                             />
