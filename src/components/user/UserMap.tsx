@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { halteService, Halte } from "@/services/halteService";
@@ -31,26 +31,10 @@ export const CLUSTER_COLORS = {
   transit:  { line: "#f59e0b", glow: "#d97706" },   // soft amber-yellow
 };
 
-const SHADOW = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png';
-const MARKER_BASE = 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img';
-
 const busIcon = new L.Icon({
   iconUrl: 'https://cdn-icons-png.flaticon.com/512/3448/3448339.png',
   iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -18],
 });
-
-// Solid cluster icons — no demand-based colouring
-const HALTE_ICONS = {
-  cluster1: new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-blue.png`,   shadowUrl: SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
-  cluster2: new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-green.png`,  shadowUrl: SHADOW, iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41] }),
-  transit:  new L.Icon({ iconUrl: `${MARKER_BASE}/marker-icon-gold.png`,   shadowUrl: SHADOW, iconSize: [30, 49], iconAnchor: [15, 49], popupAnchor: [1, -42], shadowSize: [41, 41] }),
-};
-
-/** Returns the cluster icon for a given halte array-index (0-based). */
-function getHalteIcon(idx: number) {
-  if (idx === TRANSIT_HALTE_INDEX) return HALTE_ICONS.transit;
-  return idx < TRANSIT_HALTE_INDEX ? HALTE_ICONS.cluster2 : HALTE_ICONS.cluster1;
-}
 
 /** Returns the cluster label string for popup display. */
 function getClusterLabel(idx: number): string {
@@ -132,7 +116,7 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 keepBuffer={4}
             />
 
-            {/* ── Cluster 1 polyline — Orange ─────────────────────────────── */}
+            {/* ── Cluster 1 polyline — Blue ───────────────────────────────── */}
             {poly1.length > 0 && (
                 <>
                     <Polyline positions={poly1} color={CLUSTER_COLORS.cluster1.glow} weight={10} opacity={0.18} />
@@ -143,7 +127,7 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 <Polyline positions={fallback1} color={CLUSTER_COLORS.cluster1.line} weight={4} opacity={0.45} dashArray="8 6" />
             )}
 
-            {/* ── Cluster 2 polyline — Green ──────────────────────────────── */}
+            {/* ── Cluster 2 polyline — Light Green ─────────────────────────── */}
             {poly2.length > 0 && (
                 <>
                     <Polyline positions={poly2} color={CLUSTER_COLORS.cluster2.glow} weight={10} opacity={0.18} />
@@ -154,20 +138,25 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 <Polyline positions={fallback2} color={CLUSTER_COLORS.cluster2.line} weight={4} opacity={0.45} dashArray="8 6" />
             )}
 
-            {/* ── Halte Markers — solid cluster colour ─────────────────────── */}
+            {/* ── Halte Markers — compact circle per cluster colour ────────── */}
             {haltes.map((halte, idx) => {
                 const isTransit = idx === TRANSIT_HALTE_INDEX;
                 const clusterColor =
-                    isTransit             ? CLUSTER_COLORS.transit.line :
+                    isTransit                ? CLUSTER_COLORS.transit.line  :
                     idx < TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.cluster2.line :
-                                              CLUSTER_COLORS.cluster1.line;
+                                               CLUSTER_COLORS.cluster1.line;
 
                 return (
-                    <Marker
+                    <CircleMarker
                         key={halte.halteId}
-                        position={[halte.latitude, halte.longitude]}
-                        icon={getHalteIcon(idx)}
-                        zIndexOffset={isTransit ? 1000 : 0}
+                        center={[halte.latitude, halte.longitude]}
+                        radius={isTransit ? 10 : 7}
+                        pathOptions={{
+                            color: "#ffffff",
+                            fillColor: clusterColor,
+                            fillOpacity: 1,
+                            weight: isTransit ? 3 : 2,
+                        }}
                     >
                         <Popup>
                             <div style={{ minWidth: 180 }}>
@@ -193,7 +182,7 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                                 </span>
                             </div>
                         </Popup>
-                    </Marker>
+                    </CircleMarker>
                 );
             })}
 
