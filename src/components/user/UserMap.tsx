@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useMemo, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, CircleMarker, useMap, Pane } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { halteService, Halte } from "@/services/halteService";
@@ -271,53 +271,54 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
             )}
 
             {/* ── Halte Markers — compact circle per cluster colour ────────── */}
-            {haltes.map((halte, idx) => {
-                const isTransit = idx === TRANSIT_HALTE_INDEX;
-                const clusterColor =
-                    isTransit                ? CLUSTER_COLORS.transit.line  :
-                    idx < TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.cluster2.line :
-                                               CLUSTER_COLORS.cluster1.line;
+            <Pane name="haltePane" style={{ zIndex: 450 }}>
+                {haltes.map((halte, idx) => {
+                    const isTransit = idx === TRANSIT_HALTE_INDEX;
+                    const clusterColor =
+                        isTransit                ? CLUSTER_COLORS.transit.line  :
+                        idx < TRANSIT_HALTE_INDEX ? CLUSTER_COLORS.cluster2.line :
+                                                   CLUSTER_COLORS.cluster1.line;
 
-                return (
-                    <CircleMarker
-                        key={halte.halteId}
-                        center={[halte.latitude, halte.longitude]}
-                        radius={isTransit ? 10 : 7}
-                        pathOptions={{
-                            pane: "markerPane",
-                            color: "#ffffff",
-                            fillColor: clusterColor,
-                            fillOpacity: 1,
-                            weight: isTransit ? 3 : 2,
-                        }}
-                    >
-                        <Popup>
-                            <div style={{ minWidth: 180 }}>
-                                <strong style={{ color: clusterColor }}>
-                                    {isTransit ? "🔀 " : ""}{halte.namaHalte}
-                                </strong>
-                                <br />
-                                <span style={{ fontSize: 11, color: "#3f4945" }}>
-                                    Halte #{halte.urutan} — Rute 14
-                                </span>
-                                <br />
-                                <span style={{
-                                    display: "inline-block",
-                                    marginTop: 4,
-                                    fontSize: 10,
-                                    fontWeight: 700,
-                                    padding: "2px 8px",
-                                    borderRadius: 6,
-                                    background: clusterColor + "22",
-                                    color: clusterColor,
-                                }}>
-                                    {getClusterLabel(idx)}
-                                </span>
-                            </div>
-                        </Popup>
-                    </CircleMarker>
-                );
-            })}
+                    return (
+                        <CircleMarker
+                            key={halte.halteId}
+                            center={[halte.latitude, halte.longitude]}
+                            radius={isTransit ? 10 : 7}
+                            pathOptions={{
+                                color: "#ffffff",
+                                fillColor: clusterColor,
+                                fillOpacity: 1,
+                                weight: isTransit ? 3 : 2,
+                            }}
+                        >
+                            <Popup>
+                                <div style={{ minWidth: 180 }}>
+                                    <strong style={{ color: clusterColor }}>
+                                        {isTransit ? "🔀 " : ""}{halte.namaHalte}
+                                    </strong>
+                                    <br />
+                                    <span style={{ fontSize: 11, color: "#3f4945" }}>
+                                        Halte #{halte.urutan} — Rute 14
+                                    </span>
+                                    <br />
+                                    <span style={{
+                                        display: "inline-block",
+                                        marginTop: 4,
+                                        fontSize: 10,
+                                        fontWeight: 700,
+                                        padding: "2px 8px",
+                                        borderRadius: 6,
+                                        background: clusterColor + "22",
+                                        color: clusterColor,
+                                    }}>
+                                        {getClusterLabel(idx)}
+                                    </span>
+                                </div>
+                            </Popup>
+                        </CircleMarker>
+                    );
+                })}
+            </Pane>
 
             {/* ── Bus Markers (real-time) ──────────────────────────────────── */}
             {buses.map(bus => (
