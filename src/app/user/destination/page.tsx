@@ -34,19 +34,6 @@ export default function DestinationSearchPage() {
     useEffect(() => {
         halteService.getHaltesByRoute("RUTE_14").then(data => {
             setHaltes(data);
-            if (navigator.geolocation && data.length > 0) {
-                navigator.geolocation.getCurrentPosition((pos) => {
-                    let minDistance = Infinity;
-                    let nearest = data[0];
-                    data.forEach(h => {
-                        const dist = calculateDistanceKm(pos.coords.latitude, pos.coords.longitude, h.latitude, h.longitude);
-                        if (dist < minDistance) { minDistance = dist; nearest = h; }
-                    });
-                    setFromHalte(nearest);
-                }, () => setFromHalte(data[0]));
-            } else if (data.length > 0) {
-                setFromHalte(data[0]);
-            }
         });
     }, []);
 
@@ -208,113 +195,75 @@ export default function DestinationSearchPage() {
                     </div>
                 )}
 
-                {/* Halte list — only shown when user has typed something */}
-                {activeSearch.trim().length === 0 ? (
-                    // ── Empty / prompt state ─────────────────────────────────
-                    <div className="flex flex-col items-center justify-center py-16 gap-4">
-                        <div className="w-16 h-16 rounded-full bg-[#f2f4f6] flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
-                                fill="none" stroke="#bfc9c4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="11" cy="11" r="8"/>
-                                <path d="m21 21-4.3-4.3"/>
-                            </svg>
-                        </div>
-                        <div className="text-center">
-                            <p className="font-semibold text-[#3f4945] text-sm">Ketik nama halte</p>
-                            <p className="text-xs text-[#707975] mt-1">
-                                Tap kolom&nbsp;
-                                <span className="font-bold" style={{ color: "#006c49" }}>Asal</span>
-                                &nbsp;atau&nbsp;
-                                <span className="font-bold" style={{ color: "#ba1a1a" }}>Tujuan</span>
-                                &nbsp;lalu mulai mengetik
-                            </p>
-                        </div>
-                        <div className="flex gap-2 mt-2">
-                            <div className="flex items-center gap-1.5 text-[10px] text-[#707975] bg-white rounded-lg px-3 py-1.5 shadow-sm border border-[#e0e3e5]">
-                                <span className="w-2 h-2 rounded-full inline-block" style={{ background: "#2980d9" }}></span>
-                                Cluster 1
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-[#707975] bg-white rounded-lg px-3 py-1.5 shadow-sm border border-[#e0e3e5]">
-                                <span className="w-2 h-2 rounded-full inline-block" style={{ background: "#22c55e" }}></span>
-                                Cluster 2
-                            </div>
-                            <div className="flex items-center gap-1.5 text-[10px] text-[#707975] bg-white rounded-lg px-3 py-1.5 shadow-sm border border-[#e0e3e5]">
-                                <span className="text-sm">🔀</span>
-                                Transit
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    // ── Search results ───────────────────────────────────────
-                    <div className="flex flex-col gap-1">
-                        <p className="text-xs text-[#707975] mb-2 px-1">
-                            {filteredHaltes.length} halte ditemukan
-                            {clusterFilter !== "all" && <span> — {clusterFilter === "cluster1" ? "Cluster 1 + Transit" : "Cluster 2 + Transit"}</span>}
-                        </p>
+                {/* Halte list — always visible, filtered by cluster + search */}
+                <div className="flex flex-col gap-1">
+                    <p className="text-xs text-[#707975] mb-2 px-1">
+                        {filteredHaltes.length} halte ditemukan
+                        {clusterFilter !== "all" && <span> — {clusterFilter === "cluster1" ? "Cluster 1 + Transit" : "Cluster 2 + Transit"}</span>}
+                    </p>
 
-                        {filteredHaltes.map(h => {
-                            const type = getHalteType(h.urutan);
-                            const clr   = type === "transit"  ? CLUSTER.transit.color  :
-                                          type === "cluster1" ? CLUSTER.cluster1.color :
-                                                                CLUSTER.cluster2.color;
-                            const bgClr = type === "transit"  ? CLUSTER.transit.bg     :
-                                          type === "cluster1" ? CLUSTER.cluster1.bg    :
-                                                                CLUSTER.cluster2.bg;
-                            const isTransit = type === "transit";
+                    {filteredHaltes.map(h => {
+                        const type = getHalteType(h.urutan);
+                        const clr   = type === "transit"  ? CLUSTER.transit.color  :
+                                      type === "cluster1" ? CLUSTER.cluster1.color :
+                                                            CLUSTER.cluster2.color;
+                        const bgClr = type === "transit"  ? CLUSTER.transit.bg     :
+                                      type === "cluster1" ? CLUSTER.cluster1.bg    :
+                                                            CLUSTER.cluster2.bg;
+                        const isTransit = type === "transit";
 
-                            return (
+                        return (
+                            <div
+                                key={h.halteId}
+                                onClick={() => handleSelectHalte(h)}
+                                className="flex items-center gap-4 py-3 border-b cursor-pointer transition-all duration-150 px-2 rounded-xl"
+                                style={{
+                                    borderColor: isTransit ? "#f59e0b" : "#e0e3e5",
+                                    background: isTransit ? "#fef9e7" : "white",
+                                    borderWidth: isTransit ? 2 : 1,
+                                    marginBottom: isTransit ? 4 : 0,
+                                }}
+                            >
                                 <div
-                                    key={h.halteId}
-                                    onClick={() => handleSelectHalte(h)}
-                                    className="flex items-center gap-4 py-3 border-b cursor-pointer transition-all duration-150 px-2 rounded-xl"
-                                    style={{
-                                        borderColor: isTransit ? "#f59e0b" : "#e0e3e5",
-                                        background: isTransit ? "#fef9e7" : "white",
-                                        borderWidth: isTransit ? 2 : 1,
-                                        marginBottom: isTransit ? 4 : 0,
-                                    }}
+                                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                                    style={{ background: bgClr }}
                                 >
-                                    <div
-                                        className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-                                        style={{ background: bgClr }}
-                                    >
-                                        {isTransit ? (
-                                            <span className="text-base">🔀</span>
-                                        ) : (
-                                            <div className="w-3.5 h-3.5 rounded-full" style={{ background: clr }}></div>
+                                    {isTransit ? (
+                                        <span className="text-base">🔀</span>
+                                    ) : (
+                                        <div className="w-3.5 h-3.5 rounded-full" style={{ background: clr }}></div>
+                                    )}
+                                </div>
+
+                                <div className="flex-1">
+                                    <p className="font-semibold text-sm text-[#191c1e]">{h.namaHalte}</p>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                        <p className="text-[10px] text-[#707975]">Urutan {h.urutan}</p>
+                                        {isTransit && (
+                                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
+                                                style={{ background: "#f59e0b", color: "white" }}>TRANSIT</span>
+                                        )}
+                                        {!isTransit && (
+                                            <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
+                                                style={{ background: bgClr, color: clr }}>
+                                                {type === "cluster1" ? "Cluster 1" : "Cluster 2"}
+                                            </span>
                                         )}
                                     </div>
-
-                                    <div className="flex-1">
-                                        <p className="font-semibold text-sm text-[#191c1e]">{h.namaHalte}</p>
-                                        <div className="flex items-center gap-2 mt-0.5">
-                                            <p className="text-[10px] text-[#707975]">Urutan {h.urutan}</p>
-                                            {isTransit && (
-                                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full"
-                                                    style={{ background: "#f59e0b", color: "white" }}>TRANSIT</span>
-                                            )}
-                                            {!isTransit && (
-                                                <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
-                                                    style={{ background: bgClr, color: clr }}>
-                                                    {type === "cluster1" ? "Cluster 1" : "Cluster 2"}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                                        fill="none" stroke="#bfc9c4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="m9 18 6-6-6-6"/>
-                                    </svg>
                                 </div>
-                            );
-                        })}
 
-                        {filteredHaltes.length === 0 && (
-                            <p className="text-center text-[#707975] py-8 text-sm">Halte tidak ditemukan.</p>
-                        )}
-                    </div>
-                )}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="#bfc9c4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </div>
+                        );
+                    })}
+
+                    {filteredHaltes.length === 0 && (
+                        <p className="text-center text-[#707975] py-8 text-sm">Halte tidak ditemukan.</p>
+                    )}
+                </div>
             </div>
         </div>
     );
