@@ -26,7 +26,22 @@ export const authService = {
             return { success: true, user: { ...user, role } };
         } catch (error: unknown) {
             console.error("Login error:", error);
-            throw new Error("Email atau Password salah (atau belum terdaftar di Firebase).");
+            // Expose actual Firebase error code for debugging
+            const firebaseError = error as { code?: string; message?: string };
+            const code = firebaseError.code ?? "";
+            if (code === "auth/user-not-found" || code === "auth/invalid-credential") {
+                throw new Error(`Akun tidak ditemukan di Firebase Auth. Daftarkan dulu. (${code})`);
+            }
+            if (code === "auth/wrong-password") {
+                throw new Error(`Password salah. (${code})`);
+            }
+            if (code === "auth/invalid-email") {
+                throw new Error(`Format email tidak valid. (${code})`);
+            }
+            if (code === "auth/too-many-requests") {
+                throw new Error(`Terlalu banyak percobaan. Coba lagi nanti. (${code})`);
+            }
+            throw new Error(`Login gagal: ${firebaseError.message ?? code ?? "unknown error"}`);
         }
     },
 
