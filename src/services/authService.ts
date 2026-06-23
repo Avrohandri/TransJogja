@@ -20,8 +20,15 @@ export const authService = {
             const user = userCredential.user;
             
             // Check role
-            const userDoc = await getDoc(doc(firestoreDb, "users", user.uid));
-            const role = userDoc.exists() ? userDoc.data().role : "user";
+            let role = "user";
+            try {
+                const userDoc = await getDoc(doc(firestoreDb, "users", user.uid));
+                if (userDoc.exists()) {
+                    role = userDoc.data().role || "user";
+                }
+            } catch (firestoreError) {
+                console.warn("Gagal mengambil role dari Firestore, default ke 'user':", firestoreError);
+            }
             
             return { success: true, user: { ...user, role } };
         } catch (error: unknown) {
