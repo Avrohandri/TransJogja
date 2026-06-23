@@ -257,8 +257,8 @@ export default function OptimizationPage() {
                                 </span>
                             </div>
                             <div className="flex justify-between text-[10px] text-[#3f4945] mt-1 px-1">
-                                <span>Lebih ketat</span>
                                 <span>Lebih longgar</span>
+                                <span>Lebih ketat</span>
                             </div>
                         </div>
 
