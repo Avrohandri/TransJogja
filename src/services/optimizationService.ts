@@ -2,6 +2,14 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
 import { halteList } from "./demandService";
 
+// Stable dummy demand data (same as demandService) — used when Firestore is unreachable
+const dummyDemand: number[] = [
+    42, 18, 25, 31, 12, 8, 19, 27, 35, 14,
+    22, 16, 38, 11, 29, 45, 17, 23, 33, 9,
+    20, 15, 41, 26, 13, 37, 10, 28, 44, 21,
+    16, 32, 7,
+];
+
 export interface OptimizationResult {
     halteIndex: number;
     namaHalte: string;
@@ -21,6 +29,7 @@ export interface OptimizationSummary {
     optimalCount: number;
     nonOptimalCount: number;
     threshold: number;
+    isUsingDummyData?: boolean;
 }
 
 /**
@@ -43,8 +52,10 @@ export const optimizationService = {
         // Aggregate demand per halte across all months
         const aggregated = Array(halteList.length).fill(0);
 
+        let isUsingDummyData = false;
         const firestoreDb = db;
         if (firestoreDb) {
+            let totalFetched = 0;
             for (const { bulan, tahun } of months) {
                 try {
                     const q = query(
@@ -59,12 +70,22 @@ export const optimizationService = {
                         const idx = halteList.indexOf(data.namaHalte);
                         if (idx !== -1) {
                             aggregated[idx] += data.jumlahPenumpang || 0;
+                            totalFetched++;
                         }
                     });
                 } catch (e) {
-                    console.error(`Error fetching demand for ${tahun}-${bulan}`, e);
+                    console.warn(`Firestore read failed for ${tahun}-${bulan}, using dummy data:`, e);
                 }
             }
+            // If nothing fetched from Firestore, fall back to dummy
+            if (totalFetched === 0) {
+                isUsingDummyData = true;
+                dummyDemand.forEach((val, i) => { aggregated[i] = val * months.length; });
+            }
+        } else {
+            // No Firestore connection at all — use dummy
+            isUsingDummyData = true;
+            dummyDemand.forEach((val, i) => { aggregated[i] = val * months.length; });
         }
 
         // Compute statistics
@@ -107,6 +128,7 @@ export const optimizationService = {
             optimalCount,
             nonOptimalCount: results.length - optimalCount,
             threshold: zThreshold,
+            isUsingDummyData,
         };
     },
 };

@@ -283,6 +283,17 @@ export default function OptimizationPage() {
                         </button>
                     </div>
 
+                    {/* Dummy data warning */}
+                    {summary?.isUsingDummyData && (
+                        <div className="bg-amber-50 border border-amber-300 text-amber-800 px-4 py-3 rounded-xl text-xs flex items-start gap-2">
+                            <span className="text-base flex-shrink-0">⚠️</span>
+                            <div>
+                                <p className="font-bold mb-0.5">Menggunakan Data Demo</p>
+                                <p>Firestore tidak dapat diakses (permission denied). Hasil analisis berdasarkan data dummy. Aktifkan Firestore Rules untuk menggunakan data nyata.</p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Summary Stats */}
                     {summary && (
                         <div className="bg-white rounded-xl p-5 shadow-sm">
