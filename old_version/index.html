@@ -341,7 +341,8 @@
     </div>
 
     <!-- Modal Lihat Semua Input -->
-    <div id="transactionsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+    <div id="transactionsModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 flex flex-col" style="max-height:85vh;">
             <!-- Modal Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-surface-variant flex-shrink-0">
@@ -349,9 +350,10 @@
                     <h3 class="text-title-lg font-bold text-primary">Data Input Hari Ini</h3>
                     <p class="text-[11px] text-on-surface-variant mt-0.5">Seluruh input penumpang hari ini</p>
                 </div>
-                <button onclick="closeTransactionsModal()" class="material-symbols-outlined text-on-surface-variant hover:text-error hover:bg-surface-container-low p-2 rounded-full transition-colors">close</button>
+                <button onclick="closeTransactionsModal()"
+                    class="material-symbols-outlined text-on-surface-variant hover:text-error hover:bg-surface-container-low p-2 rounded-full transition-colors">close</button>
             </div>
-            
+
             <!-- Modal Body (List) -->
             <div class="overflow-y-auto flex-1 px-6 py-4 flex flex-col gap-2" id="modalTransactionsContainer">
                 <p class="text-sm text-center text-on-surface-variant py-4">Memuat data transaksi hari ini...</p>
@@ -361,14 +363,17 @@
             <div class="px-6 py-4 border-t border-surface-variant flex-shrink-0 bg-surface-container-low rounded-b-2xl">
                 <p class="text-[12px] font-semibold text-primary mb-2">Download Data Hari Lain (.csv)</p>
                 <div class="flex gap-2">
-                    <input type="date" id="downloadDate" class="flex-1 text-body-md border border-surface-variant rounded-lg px-3 py-1.5 focus:border-primary outline-none text-sm"/>
-                    <button onclick="downloadCSV()" class="px-4 py-1.5 bg-primary text-white text-[12px] font-semibold rounded-lg hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity">
+                    <input type="date" id="downloadDate"
+                        class="flex-1 text-body-md border border-surface-variant rounded-lg px-3 py-1.5 focus:border-primary outline-none text-sm" />
+                    <button onclick="downloadCSV()"
+                        class="px-4 py-1.5 bg-primary text-white text-[12px] font-semibold rounded-lg hover:opacity-90 flex items-center gap-1 shadow-sm transition-opacity">
                         <span class="material-symbols-outlined" style="font-size:16px;">download</span> Unduh
                     </button>
                 </div>
                 <p class="text-[10px] text-error mt-2 italic flex items-start gap-1">
                     <span class="material-symbols-outlined mt-0.5" style="font-size:12px;">info</span>
-                    <span>File akan menghilang sepenuhnya bila tidak didownload lebih dari 1 minggu untuk menjaga kapasitas database.</span>
+                    <span>File akan menghilang sepenuhnya bila tidak didownload lebih dari 1 minggu untuk menjaga
+                        kapasitas database.</span>
                 </p>
             </div>
         </div>
@@ -404,11 +409,11 @@
             liveTransactionsUnsubscribe = transactionService.subscribeLiveTransactions((transactions) => {
                 const container = document.getElementById('liveTransactionsContainer');
                 container.innerHTML = '';
-                if(transactions.length === 0) {
+                if (transactions.length === 0) {
                     container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Belum ada data transaksi</p>';
                 } else {
                     transactions.forEach(trx => {
-                        const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}) : '';
+                        const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
                         container.innerHTML += `
                             <div class="flex items-center justify-between p-unit*2 border-b border-surface-variant last:border-0 hover:bg-surface-container-low transition-colors rounded-lg">
                                 <div class="flex items-center gap-unit*2">
@@ -430,7 +435,7 @@
             const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
             document.getElementById('displayBulan').value = currentMonth;
             document.getElementById('inputBulan').value = currentMonth;
-            
+
             // Build Form
             const form = document.getElementById('halteForm');
             halteList.forEach((nama, i) => {
@@ -452,7 +457,7 @@
         }
 
         // --- DEMAND CHART & STATS ---
-        window.updateChartAndStats = function() {
+        window.updateChartAndStats = function () {
             const total = halteData.reduce((a, b) => a + b, 0);
             document.getElementById('statTotal').innerText = total.toLocaleString();
 
@@ -467,7 +472,7 @@
             const padding = 10;
             const maxVal = Math.max(...halteData, 10) * 1.2;
 
-            if(halteData.length === 0) return;
+            if (halteData.length === 0) return;
 
             const points = halteData.map((val, i) => {
                 const x = padding + (i / (halteData.length - 1)) * (svgWidth - 2 * padding);
@@ -539,40 +544,40 @@
             };
         };
 
-        window.getMonthName = function(dateString) {
+        window.getMonthName = function (dateString) {
             if (!dateString) return "Bulan Ini";
             const date = new Date(dateString + "-01");
             return date.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
         };
 
-        window.updateDisplayMonth = async function() {
+        window.updateDisplayMonth = async function () {
             const selectedMonth = document.getElementById('displayBulan').value;
             const [tahun, bulan] = selectedMonth.split('-');
             document.getElementById('currentMonthLabel').innerText = window.getMonthName(selectedMonth);
-            
+
             halteData = await demandService.getDemandByMonth(bulan, tahun);
             window.updateChartAndStats();
-            document.getElementById('inputBulan').value = selectedMonth; 
-            
+            document.getElementById('inputBulan').value = selectedMonth;
+
             // Sync form inputs
             for (let i = 0; i < 35; i++) {
                 const el = document.getElementById(`halte_${i}`);
-                if(el) el.value = halteData[i] || 0;
+                if (el) el.value = halteData[i] || 0;
             }
         };
 
         // --- MANUAL DEMAND INPUT MODAL ---
-        window.openInputModal = function() {
+        window.openInputModal = function () {
             document.getElementById('inputModal').classList.remove('hidden');
             document.getElementById('inputModal').classList.add('flex');
         };
 
-        window.closeInputModal = function() {
+        window.closeInputModal = function () {
             document.getElementById('inputModal').classList.add('hidden');
             document.getElementById('inputModal').classList.remove('flex');
         };
 
-        window.saveInputData = async function() {
+        window.saveInputData = async function () {
             const btn = document.querySelector('button[onclick="saveInputData()"]');
             btn.disabled = true;
             btn.innerHTML = 'Menyimpan...';
@@ -587,16 +592,16 @@
 
             try {
                 await demandService.saveDemand(bulan, tahun, newData);
-                
+
                 // Update local data if the saved month is the currently displayed month
-                if(document.getElementById('displayBulan').value === bulanInput) {
+                if (document.getElementById('displayBulan').value === bulanInput) {
                     halteData = newData;
                     window.updateChartAndStats();
                 }
-                
+
                 alert(`✅ Data demand ${window.getMonthName(bulanInput)} berhasil disimpan!`);
                 window.closeInputModal();
-            } catch(e) {
+            } catch (e) {
                 alert("Gagal menyimpan data: " + e.message);
             } finally {
                 btn.disabled = false;
@@ -605,9 +610,9 @@
         };
 
         // --- TRANSACTIONS MODAL & CSV ---
-        window.openTransactionsModal = async function() {
+        window.openTransactionsModal = async function () {
             const m = document.getElementById('transactionsModal');
-            m.classList.remove('hidden'); 
+            m.classList.remove('hidden');
             m.classList.add('flex');
 
             // Load today's transactions automatically
@@ -616,24 +621,24 @@
             await loadTransactionsByDate(todayStr);
         };
 
-        window.closeTransactionsModal = function() {
+        window.closeTransactionsModal = function () {
             const m = document.getElementById('transactionsModal');
-            m.classList.add('hidden'); 
+            m.classList.add('hidden');
             m.classList.remove('flex');
         };
 
         async function loadTransactionsByDate(dateStr) {
             const container = document.getElementById('modalTransactionsContainer');
             container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Memuat data...</p>';
-            
+
             todayTransactions = await transactionService.getTransactionsByDate(dateStr);
             container.innerHTML = '';
-            
-            if(todayTransactions.length === 0) {
+
+            if (todayTransactions.length === 0) {
                 container.innerHTML = '<p class="text-sm text-center text-on-surface-variant py-4">Tidak ada transaksi pada tanggal ini.</p>';
             } else {
                 todayTransactions.forEach(trx => {
-                    const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', {hour: '2-digit', minute:'2-digit'}) : '';
+                    const timeStr = trx.waktuTransaksi ? new Date(trx.waktuTransaksi).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : '';
                     container.innerHTML += `
                         <div class="flex items-center justify-between p-3 border border-surface-variant rounded-lg hover:bg-surface-container-low transition-colors">
                             <div>
@@ -651,9 +656,9 @@
             await loadTransactionsByDate(e.target.value);
         });
 
-        window.downloadCSV = function() {
+        window.downloadCSV = function () {
             const date = document.getElementById('downloadDate').value;
-            if(!date) return alert("Silakan pilih tanggal terlebih dahulu.");
+            if (!date) return alert("Silakan pilih tanggal terlebih dahulu.");
             csvExportService.downloadCSV(todayTransactions, date);
         };
 

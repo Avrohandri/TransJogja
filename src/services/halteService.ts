@@ -33,21 +33,49 @@ export const fallbackHaltes: Halte[] = fallbackHalteNames.map((nama, idx) => {
 
 export const halteService = {
     async getHaltesByRoute(routeId: string): Promise<Halte[]> {
-        if (!db) return fallbackHaltes;
-        try {
-            const q = query(
-                collection(db, "halte"),
-                where("routeId", "==", routeId),
-                orderBy("urutan", "asc")
-            );
-            const snapshot = await getDocs(q);
-            if (snapshot.empty) {
-                return fallbackHaltes;
+        let allHaltes = fallbackHaltes;
+        
+        if (db) {
+            try {
+                const q = query(
+                    collection(db, "halte"),
+                    where("routeId", "==", routeId),
+                    orderBy("urutan", "asc")
+                );
+                const snapshot = await getDocs(q);
+                if (!snapshot.empty) {
+                    allHaltes = snapshot.docs.map(doc => doc.data() as Halte);
+                }
+            } catch(e) {
+                console.error("Error fetching haltes", e);
             }
-            return snapshot.docs.map(doc => doc.data() as Halte);
-        } catch(e) {
-            console.error("Error fetching haltes", e);
-            return fallbackHaltes;
+        }
+        
+        // Filter out inactive haltes based on optimization settings
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('transjogja_inactive_haltes');
+            if (saved) {
+                try {
+                    const inactiveUrutans = JSON.parse(saved) as number[];
+                    allHaltes = allHaltes.filter(h => !inactiveUrutans.includes(h.urutan));
+                } catch(e) {
+                    console.error("Error parsing inactive haltes", e);
+                }
+            }
+        }
+        
+        return allHaltes;
+    },
+
+    async applyOptimization(inactiveUrutans: number[]) {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('transjogja_inactive_haltes', JSON.stringify(inactiveUrutans));
+        }
+    },
+
+    async resetOptimization() {
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('transjogja_inactive_haltes');
         }
     }
 };

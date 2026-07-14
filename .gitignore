@@ -51,3 +51,8 @@ next-env.d.ts
 # ===== OS FILES =====
 Thumbs.db
 Desktop.ini
+
+# ===== BACKUPS / OLD VERSIONS =====
+/old_version/
+*.bak
+*.tmp

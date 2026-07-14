@@ -81,11 +81,42 @@ export const authService = {
         }
     },
 
+    async updateProfile(fullname: string, phone: string) {
+        if (typeof window !== 'undefined') {
+            // Save locally as a fallback or for demo users
+            const localProfile = JSON.parse(localStorage.getItem('transjogja_profile_cache') || '{}');
+            localProfile.fullname = fullname;
+            localProfile.phone = phone;
+            localStorage.setItem('transjogja_profile_cache', JSON.stringify(localProfile));
+        }
+
+        if (auth?.currentUser && db) {
+            try {
+                await setDoc(doc(db, "users", auth.currentUser.uid), {
+                    fullname,
+                    phone
+                }, { merge: true });
+            } catch (e) {
+                console.warn("Failed to update profile in Firestore (might be permission issue)", e);
+            }
+        }
+    },
+
     onAuthStateChanged(callback: (user: Record<string, unknown> | null) => void) {
         const checkDemoLogin = () => {
             const isDemoAdmin = typeof window !== 'undefined' ? localStorage.getItem('demo_admin_logged_in') : null;
             if (isDemoAdmin) {
-                callback({ email: 'admin@transjogja.id', role: 'admin' });
+                let localCache = {};
+                if (typeof window !== 'undefined') {
+                    const saved = localStorage.getItem('transjogja_profile_cache');
+                    if (saved) localCache = JSON.parse(saved);
+                }
+                callback({ 
+                    email: 'admin@transjogja.id', 
+                    role: 'admin',
+                    fullname: localCache.fullname || 'Administrator',
+                    phone: localCache.phone || ''
+                });
                 return true;
             }
             return false;
@@ -102,8 +133,22 @@ export const authService = {
                 try {
                     if (!firestoreDb) { callback({ ...user, role: "user" }); return; }
                     const userDoc = await getDoc(doc(firestoreDb, "users", user.uid));
-                    const role = userDoc.exists() ? userDoc.data().role : "user";
-                    callback({ ...user, role });
+                    const dbData = userDoc.exists() ? userDoc.data() : {};
+                    const role = dbData.role || "user";
+                    
+                    // Merge with local cache if available
+                    let localCache = {};
+                    if (typeof window !== 'undefined') {
+                        const saved = localStorage.getItem('transjogja_profile_cache');
+                        if (saved) localCache = JSON.parse(saved);
+                    }
+
+                    callback({ 
+                        ...user, 
+                        role, 
+                        fullname: localCache.fullname || dbData.fullname,
+                        phone: localCache.phone || dbData.phone
+                    });
                 } catch {
                     callback({ ...user, role: "user" });
                 }

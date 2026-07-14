@@ -21,6 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn("font-sans", inter.variable)}>
       <body className="antialiased">
+        <script dangerouslySetInnerHTML={{ __html: `
+            if (localStorage.getItem('transjogja_theme') === 'dark') {
+                document.body.classList.add('dark-theme');
+            }
+        ` }} />
         {children}
       </body>
     </html>

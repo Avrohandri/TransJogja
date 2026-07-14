@@ -76,5 +76,23 @@ export const transactionService = {
             console.error("Error getTransactionsByDate", e);
             return dummyTransactions;
         }
+    },
+
+    async createTransaction(halteMasuk: string): Promise<boolean> {
+        if (!db) return true;
+        try {
+            const { addDoc, collection } = await import("firebase/firestore");
+            await addDoc(collection(db, "transactions"), {
+                transactionId: `TRX-${Math.floor(Math.random() * 10000)}`,
+                userId: "USR-TJKG",
+                halteMasuk,
+                waktuTransaksi: new Date(),
+                statusPembayaran: "Paid"
+            });
+            return true;
+        } catch (e) {
+            console.error("Error creating transaction", e);
+            return false;
+        }
     }
 };

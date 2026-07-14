@@ -92,3 +92,20 @@
     @apply font-sans;
   }
 }
+
+/* Javanese Dark Theme Global Overrides */
+.dark-theme .bg-\[\#FAF8F5\] { background-color: #1A120B !important; }
+.dark-theme .bg-white { background-color: #2D1E12 !important; }
+.dark-theme .bg-\[\#FFFDF0\] { background-color: #382414 !important; }
+.dark-theme .bg-\[\#F2EAE1\] { background-color: #4A2E1A !important; }
+
+.dark-theme .text-\[\#2D1E12\] { color: #FAF8F5 !important; }
+.dark-theme .text-\[\#8D7B68\] { color: #D1C7BD !important; }
+.dark-theme .text-\[\#5C3A21\] { color: #C59B6D !important; }
+
+.dark-theme .border-\[\#E6D5C3\] { border-color: #4A2E1A !important; }
+.dark-theme .border-\[\#C59B6D\] { border-color: #8D7B68 !important; }
+
+/* Invert map/image areas slightly if needed, or preserve existing */
+.dark-theme .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5) !important; }
+.dark-theme .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important; }
