@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { authService } from "@/services/authService";
 import Link from "next/link";
-import Image from "next/image";
+
 
 import { Cinzel } from "next/font/google";
 

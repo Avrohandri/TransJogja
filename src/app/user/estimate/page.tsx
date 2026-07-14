@@ -70,7 +70,7 @@ function RouteEstimationContent() {
     const fromUrutan = fromHalte.urutan;
     const toUrutan = toHalte.urutan;
     
-    let routeInfo = [];
+    const routeInfo = [];
     let requiresTransit = false;
 
     if (fromUrutan <= TRANSIT_URUTAN && toUrutan <= TRANSIT_URUTAN) {
