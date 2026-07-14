@@ -36,9 +36,10 @@ export default function UserProfilePage() {
         const unsubscribe = authService.onAuthStateChanged((u) => {
             if (!u) router.push("/login");
             else {
-                setUser(u);
-                setFullname(u.fullname || (typeof u.email === 'string' ? u.email.split('@')[0] : "Pengguna"));
-                setPhone(u.phone || "0812-3456-7890");
+                const userProfile = u as UserProfile;
+                setUser(userProfile);
+                setFullname(userProfile.fullname || (typeof userProfile.email === 'string' ? userProfile.email.split('@')[0] : "Pengguna"));
+                setPhone(userProfile.phone || "0812-3456-7890");
             }
         });
         return () => unsubscribe();

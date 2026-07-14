@@ -106,7 +106,7 @@ export const authService = {
         const checkDemoLogin = () => {
             const isDemoAdmin = typeof window !== 'undefined' ? localStorage.getItem('demo_admin_logged_in') : null;
             if (isDemoAdmin) {
-                let localCache = {};
+                let localCache: { fullname?: string; phone?: string } = {};
                 if (typeof window !== 'undefined') {
                     const saved = localStorage.getItem('transjogja_profile_cache');
                     if (saved) localCache = JSON.parse(saved);
@@ -137,7 +137,7 @@ export const authService = {
                     const role = dbData.role || "user";
                     
                     // Merge with local cache if available
-                    let localCache = {};
+                    let localCache: { fullname?: string; phone?: string } = {};
                     if (typeof window !== 'undefined') {
                         const saved = localStorage.getItem('transjogja_profile_cache');
                         if (saved) localCache = JSON.parse(saved);
