@@ -37,7 +37,7 @@ export default function UserProfilePage() {
             if (!u) router.push("/login");
             else {
                 setUser(u);
-                setFullname(u.fullname || u.email?.split('@')[0] || "Pengguna");
+                setFullname(u.fullname || (typeof u.email === 'string' ? u.email.split('@')[0] : "Pengguna"));
                 setPhone(u.phone || "0812-3456-7890");
             }
         });
