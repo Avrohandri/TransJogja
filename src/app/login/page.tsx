@@ -100,236 +100,315 @@ export default function LoginPage() {
   };
 
   const isAdmin = mode === "admin";
-
-  /* ─── MOBILE LAYOUT (< md) ─── */
-  const MobileForm = () => (
-    <div className="flex flex-col min-h-screen px-5 py-8 relative" style={{ backgroundColor: colors.bgLight }}>
-      <div className="absolute inset-0 opacity-5 bg-cover bg-center pointer-events-none"
-        style={{ backgroundImage: "url('/images/batik_bg.png')" }} />
-
-      <div className="relative z-10 flex flex-col flex-1">
-        {/* Logo */}
-        <div className="flex flex-col items-center gap-2 mb-8 pt-4">
-          <div className="p-2 border border-[#C59B6D] rounded-full bg-white shadow-sm">
-            <TJIcon size={36} color={colors.primary} />
-          </div>
-          <span className="text-xl font-serif tracking-widest uppercase text-[#2D1E12]">Trans Jogja</span>
-          <span className="text-xs tracking-[0.15em] text-[#8D7B68]">Warisan &amp; Transformasi</span>
-        </div>
-
-        {/* Mode toggle */}
-        <div className="flex p-1 rounded-full mb-6 w-fit mx-auto border border-[#E6D5C3] bg-white shadow-sm">
-          {(["user", "admin"] as const).map((m) => (
-            <button key={m} type="button" onClick={() => setMode(m)}
-              className="px-5 py-2 rounded-full text-sm font-medium transition-all"
-              style={{
-                backgroundColor: mode === m ? colors.primary : "transparent",
-                color: mode === m ? "#fff" : colors.textMuted,
-              }}>
-              {m === "user" ? "Penumpang" : "Admin"}
-            </button>
-          ))}
-        </div>
-
-        {/* Heading */}
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-serif text-[#2D1E12] mb-1">
-            {isAdmin ? "Masuk Admin" : "Sugeng Rawuh"}
-          </h1>
-          <p className="text-sm font-light text-[#8D7B68]">
-            {isAdmin ? "Kelola sistem Trans Jogja." : "Masuk ke akun Anda."}
-          </p>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-800 p-3 rounded-lg mb-4 text-sm text-center">{error}</div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-[#8D7B68]"><MailIcon /></div>
-            <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-              placeholder="Surel (Email)"
-              className="block w-full pl-11 pr-4 py-3.5 bg-white border border-[#E6D5C3] rounded-xl outline-none focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] text-base text-[#2D1E12] placeholder:text-[#D1C7BD]" />
-          </div>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center text-[#8D7B68]"><LockIcon /></div>
-            <input type={showPassword ? "text" : "password"} required value={password}
-              onChange={e => setPassword(e.target.value)} placeholder="Kata Sandi"
-              className="block w-full pl-11 pr-12 py-3.5 bg-white border border-[#E6D5C3] rounded-xl outline-none focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] text-base text-[#2D1E12] placeholder:text-[#D1C7BD]" />
-            <button type="button" onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#8D7B68]">
-              <EyeIcon open={showPassword} />
-            </button>
-          </div>
-          <div className="flex justify-end">
-            <a href="#" className="text-xs font-medium hover:underline" style={{ color: colors.primary }}>Lupa Sandi?</a>
-          </div>
-          <button type="submit" disabled={isLoading}
-            className="w-full flex justify-center items-center gap-2 py-4 rounded-xl text-white font-medium text-base active:scale-[0.98] disabled:opacity-70 shadow-md mt-2"
-            style={{ backgroundColor: colors.primary }}>
-            <span>{isLoading ? "Memproses..." : "Masuk"}</span>
-            {!isLoading && <ArrowIcon />}
-          </button>
-        </form>
-
-        <div className="mt-8 pt-5 border-t border-[#E6D5C3] text-center">
-          <p className="text-sm text-[#8D7B68]">
-            Belum punya akun?{" "}
-            <Link href="/register" className="font-semibold hover:underline" style={{ color: colors.primary }}>Daftar</Link>
-          </p>
-          <p className="text-xs text-[#C59B6D] mt-1">
-            Belum memiliki akses?{" "}
-            <Link href="/register" className="font-medium hover:underline" style={{ color: colors.primary }}>Daftar</Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-
-  /* ─── DESKTOP LAYOUT (≥ md) ─── */
   const heroLeft = isAdmin ? "55%" : "0%";
   const formLeft = isAdmin ? "0%" : "45%";
 
-  const DesktopLayout = () => (
-    <div className="h-screen w-full overflow-hidden relative" style={{ backgroundColor: colors.bgLight }}>
-      {/* Hero Panel */}
-      <div
-        className="absolute top-0 h-full w-[45%] flex flex-col justify-between p-12 overflow-hidden shadow-2xl"
-        style={{
-          left: heroLeft,
-          backgroundColor: colors.primary,
-          transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          zIndex: 10,
-        }}
-      >
-        <div className="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay"
-          style={{ backgroundImage: "url('/images/batik_bg.png')" }} />
-        <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
+  return (
+    <>
+      {/* ══════════════ MOBILE (< md) ══════════════ */}
+      <div className="block md:hidden min-h-screen relative" style={{ backgroundColor: colors.bgLight }}>
+        <div
+          className="absolute inset-0 opacity-5 bg-cover bg-center pointer-events-none"
+          style={{ backgroundImage: "url('/images/batik_bg.png')" }}
+        />
 
-        <div className="relative z-10 flex items-center gap-4">
-          <div className="p-2 border border-[#C59B6D]/50 rounded-full bg-white/5 backdrop-blur-sm">
-            <TJIcon size={32} color={colors.accent} />
+        <div className="relative z-10 flex flex-col min-h-screen px-5 py-8">
+          {/* Logo */}
+          <div className="flex flex-col items-center gap-2 mb-8 pt-4">
+            <div className="p-2 border border-[#C59B6D] rounded-full bg-white shadow-sm">
+              <TJIcon size={36} color={colors.primary} />
+            </div>
+            <span className="text-xl font-serif tracking-widest uppercase text-[#2D1E12]">Trans Jogja</span>
+            <span className="text-xs tracking-[0.15em] text-[#8D7B68]">Warisan &amp; Transformasi</span>
           </div>
-          <div>
-            <span className="block text-2xl font-serif text-white tracking-widest uppercase">Trans Jogja</span>
-            <span className="block text-xs font-light tracking-[0.2em] text-[#C59B6D]">Warisan &amp; Transformasi</span>
-          </div>
-        </div>
 
-        <div className="relative z-10 mb-8"
-          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateY(12px)" : "translateY(0)", transition: "opacity 0.3s ease-out, transform 0.3s ease-out" }}>
-          <h2 className="text-4xl lg:text-5xl font-serif leading-tight text-white mb-6">
-            {isAdmin ? (<>Harmoni<br />Sistem Operasi.</>) : (<>Perjalanan Nyaman,<br />Budaya Terjaga.</>)}
-          </h2>
-          <p className="text-[#E6D5C3] font-light text-base leading-relaxed max-w-sm">
-            {isAdmin
-              ? "Kendali penuh atas operasional dan armada, disajikan dalam harmoni teknologi yang merangkul tradisi Jogja."
-              : "Menghubungkan setiap sudut kota istimewa dengan layanan transportasi yang andal, aman, dan berbudaya."}
-          </p>
-        </div>
-      </div>
-
-      {/* Form Panel */}
-      <div
-        className="absolute top-0 h-full w-[55%] flex flex-col justify-center items-center px-10 overflow-y-auto"
-        style={{
-          left: formLeft,
-          backgroundColor: colors.bgLight,
-          transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-          zIndex: 10,
-        }}
-      >
-        <div className="w-full max-w-md py-10 relative"
-          style={{ opacity: sliding ? 0 : 1, transform: sliding ? "translateX(10px)" : "translateX(0)", transition: "opacity 0.3s ease-out, transform 0.3s ease-out" }}>
-
-          <div className="flex p-1 rounded-full mb-12 w-fit mx-auto border border-[#E6D5C3] bg-white shadow-sm">
+          {/* Mode toggle */}
+          <div className="flex p-1 rounded-full mb-6 w-fit mx-auto border border-[#E6D5C3] bg-white shadow-sm">
             {(["user", "admin"] as const).map((m) => (
-              <button key={m} type="button" onClick={() => switchMode(m)}
-                className="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m)}
+                className="px-5 py-2 rounded-full text-sm font-medium transition-all"
                 style={{
                   backgroundColor: mode === m ? colors.primary : "transparent",
                   color: mode === m ? "#fff" : colors.textMuted,
-                  boxShadow: mode === m ? "0 2px 10px rgba(92, 58, 33, 0.2)" : "none",
-                }}>
-                {m === "user" ? "Penumpang" : "Abdi Dalem (Admin)"}
+                }}
+              >
+                {m === "user" ? "Penumpang" : "Admin"}
               </button>
             ))}
           </div>
 
-          <div className="mb-10 text-center">
-            <h1 className="text-3xl font-serif text-[#2D1E12] mb-3">
-              {isAdmin ? "Sugeng Rawuh, Admin" : "Sugeng Rawuh"}
+          {/* Heading */}
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-serif text-[#2D1E12] mb-1">
+              {isAdmin ? "Masuk Admin" : "Sugeng Rawuh"}
             </h1>
-            <p className="text-[#8D7B68] font-light">
-              {isAdmin ? "Silakan masuk untuk mengelola sistem." : "Masuk untuk melihat rute dan jadwal perjalanan Anda."}
+            <p className="text-sm font-light text-[#8D7B68]">
+              {isAdmin ? "Kelola sistem Trans Jogja." : "Masuk ke akun Anda."}
             </p>
           </div>
 
+          {/* Error */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6 text-sm text-center">{error}</div>
+            <div className="bg-red-50 border border-red-200 text-red-800 p-3 rounded-lg mb-4 text-sm text-center">
+              {error}
+            </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <label className="block text-xs font-medium tracking-wider uppercase" style={{ color: colors.textDark }} htmlFor="email-desktop">Surel (Email)</label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68] group-focus-within:text-[#5C3A21] transition-colors"><MailIcon /></div>
-                <input id="email-desktop" type="email" required autoComplete="email"
-                  value={email} onChange={e => setEmail(e.target.value)} placeholder="nama@email.com"
-                  className="block w-full pl-11 pr-4 py-3 bg-white border border-[#E6D5C3] rounded-lg text-[#2D1E12] focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] transition-all text-base shadow-sm placeholder:text-[#D1C7BD] outline-none" />
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Email */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68]">
+                <MailIcon />
               </div>
+              <input
+                id="mobile-email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Surel (Email)"
+                className="block w-full pl-11 pr-4 py-3.5 bg-white border border-[#E6D5C3] rounded-xl outline-none focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] text-base text-[#2D1E12] placeholder:text-[#D1C7BD]"
+              />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-end">
-                <label className="block text-xs font-medium tracking-wider uppercase" style={{ color: colors.textDark }} htmlFor="password-desktop">Kata Sandi</label>
-                <a href="#" className="text-xs font-medium hover:underline" style={{ color: colors.primary }}>Lupa Sandi?</a>
+            {/* Password */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68]">
+                <LockIcon />
               </div>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68] group-focus-within:text-[#5C3A21] transition-colors"><LockIcon /></div>
-                <input id="password-desktop" type={showPassword ? "text" : "password"} required autoComplete="current-password"
-                  value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
-                  className="block w-full pl-11 pr-12 py-3 bg-white border border-[#E6D5C3] rounded-lg text-[#2D1E12] focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] transition-all text-base shadow-sm placeholder:text-[#D1C7BD] outline-none" />
-                <button type="button" onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#8D7B68] hover:text-[#5C3A21] transition-colors focus:outline-none">
-                  <EyeIcon open={showPassword} />
-                </button>
-              </div>
+              <input
+                id="mobile-password"
+                type={showPassword ? "text" : "password"}
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Kata Sandi"
+                className="block w-full pl-11 pr-12 py-3.5 bg-white border border-[#E6D5C3] rounded-xl outline-none focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] text-base text-[#2D1E12] placeholder:text-[#D1C7BD]"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#8D7B68]"
+              >
+                <EyeIcon open={showPassword} />
+              </button>
             </div>
 
-            <button type="submit" disabled={isLoading}
-              className="w-full flex justify-center items-center gap-3 py-3.5 px-4 rounded-lg text-white font-medium text-base transition-all duration-300 active:scale-[0.98] mt-8 shadow-md hover:shadow-lg disabled:opacity-70"
+            <div className="flex justify-end">
+              <a href="#" className="text-xs font-medium hover:underline" style={{ color: colors.primary }}>
+                Lupa Sandi?
+              </a>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex justify-center items-center gap-2 py-4 rounded-xl text-white font-medium text-base active:scale-[0.98] disabled:opacity-70 shadow-md"
               style={{ backgroundColor: colors.primary }}
-              onMouseEnter={e => (e.currentTarget.style.backgroundColor = colors.primaryHover)}
-              onMouseLeave={e => (e.currentTarget.style.backgroundColor = colors.primary)}>
-              <span>{isLoading ? "Mlebet (Memproses)..." : isAdmin ? "Masuk Panel" : "Masuk"}</span>
+            >
+              <span>{isLoading ? "Memproses..." : "Masuk"}</span>
               {!isLoading && <ArrowIcon />}
             </button>
           </form>
 
-          <div className="mt-10 pt-6 border-t border-[#E6D5C3] text-center">
-            <p className="text-[#8D7B68] text-sm">
-              Belum memiliki akses?{" "}
-              <Link href="/register" className="font-medium hover:underline" style={{ color: colors.primary }}>Daftar Sekarang</Link>
+          <div className="mt-8 pt-5 border-t border-[#E6D5C3] text-center">
+            <p className="text-sm text-[#8D7B68]">
+              Belum punya akun?{" "}
+              <Link href="/register" className="font-semibold hover:underline" style={{ color: colors.primary }}>
+                Daftar
+              </Link>
             </p>
           </div>
         </div>
       </div>
-    </div>
-  );
 
-  return (
-    <>
-      {/* Mobile: shown below md */}
-      <div className="block md:hidden">
-        <MobileForm />
-      </div>
-      {/* Desktop: shown at md and above */}
-      <div className="hidden md:block">
-        <DesktopLayout />
+      {/* ══════════════ DESKTOP (≥ md) ══════════════ */}
+      <div className="hidden md:block h-screen w-full overflow-hidden relative" style={{ backgroundColor: colors.bgLight }}>
+        {/* Hero Panel */}
+        <div
+          className="absolute top-0 h-full w-[45%] flex flex-col justify-between p-12 overflow-hidden shadow-2xl"
+          style={{
+            left: heroLeft,
+            backgroundColor: colors.primary,
+            transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            zIndex: 10,
+          }}
+        >
+          <div
+            className="absolute inset-0 opacity-40 bg-cover bg-center mix-blend-overlay"
+            style={{ backgroundImage: "url('/images/batik_bg.png')" }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
+
+          <div className="relative z-10 flex items-center gap-4">
+            <div className="p-2 border border-[#C59B6D]/50 rounded-full bg-white/5 backdrop-blur-sm">
+              <TJIcon size={32} color={colors.accent} />
+            </div>
+            <div>
+              <span className="block text-2xl font-serif text-white tracking-widest uppercase">Trans Jogja</span>
+              <span className="block text-xs font-light tracking-[0.2em] text-[#C59B6D]">Warisan &amp; Transformasi</span>
+            </div>
+          </div>
+
+          <div
+            className="relative z-10 mb-8"
+            style={{
+              opacity: sliding ? 0 : 1,
+              transform: sliding ? "translateY(12px)" : "translateY(0)",
+              transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+            }}
+          >
+            <h2 className="text-4xl lg:text-5xl font-serif leading-tight text-white mb-6">
+              {isAdmin ? (<>Harmoni<br />Sistem Operasi.</>) : (<>Perjalanan Nyaman,<br />Budaya Terjaga.</>)}
+            </h2>
+            <p className="text-[#E6D5C3] font-light text-base leading-relaxed max-w-sm">
+              {isAdmin
+                ? "Kendali penuh atas operasional dan armada, disajikan dalam harmoni teknologi yang merangkul tradisi Jogja."
+                : "Menghubungkan setiap sudut kota istimewa dengan layanan transportasi yang andal, aman, dan berbudaya."}
+            </p>
+          </div>
+        </div>
+
+        {/* Form Panel */}
+        <div
+          className="absolute top-0 h-full w-[55%] flex flex-col justify-center items-center px-10 overflow-y-auto"
+          style={{
+            left: formLeft,
+            backgroundColor: colors.bgLight,
+            transition: "left 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            zIndex: 10,
+          }}
+        >
+          <div
+            className="w-full max-w-md py-10 relative"
+            style={{
+              opacity: sliding ? 0 : 1,
+              transform: sliding ? "translateX(10px)" : "translateX(0)",
+              transition: "opacity 0.3s ease-out, transform 0.3s ease-out",
+            }}
+          >
+            {/* Mode toggle */}
+            <div className="flex p-1 rounded-full mb-12 w-fit mx-auto border border-[#E6D5C3] bg-white shadow-sm">
+              {(["user", "admin"] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => switchMode(m)}
+                  className="px-6 py-2 rounded-full text-sm font-medium transition-all duration-300"
+                  style={{
+                    backgroundColor: mode === m ? colors.primary : "transparent",
+                    color: mode === m ? "#fff" : colors.textMuted,
+                    boxShadow: mode === m ? "0 2px 10px rgba(92, 58, 33, 0.2)" : "none",
+                  }}
+                >
+                  {m === "user" ? "Penumpang" : "Abdi Dalem (Admin)"}
+                </button>
+              ))}
+            </div>
+
+            <div className="mb-10 text-center">
+              <h1 className="text-3xl font-serif text-[#2D1E12] mb-3">
+                {isAdmin ? "Sugeng Rawuh, Admin" : "Sugeng Rawuh"}
+              </h1>
+              <p className="text-[#8D7B68] font-light">
+                {isAdmin
+                  ? "Silakan masuk untuk mengelola sistem."
+                  : "Masuk untuk melihat rute dan jadwal perjalanan Anda."}
+              </p>
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-6">
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="block text-xs font-medium tracking-wider uppercase" style={{ color: colors.textDark }} htmlFor="desktop-email">
+                  Surel (Email)
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68] group-focus-within:text-[#5C3A21] transition-colors">
+                    <MailIcon />
+                  </div>
+                  <input
+                    id="desktop-email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="nama@email.com"
+                    className="block w-full pl-11 pr-4 py-3 bg-white border border-[#E6D5C3] rounded-lg text-[#2D1E12] focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] transition-all text-base shadow-sm placeholder:text-[#D1C7BD] outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <label className="block text-xs font-medium tracking-wider uppercase" style={{ color: colors.textDark }} htmlFor="desktop-password">
+                    Kata Sandi
+                  </label>
+                  <a href="#" className="text-xs font-medium hover:underline" style={{ color: colors.primary }}>
+                    Lupa Sandi?
+                  </a>
+                </div>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#8D7B68] group-focus-within:text-[#5C3A21] transition-colors">
+                    <LockIcon />
+                  </div>
+                  <input
+                    id="desktop-password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="block w-full pl-11 pr-12 py-3 bg-white border border-[#E6D5C3] rounded-lg text-[#2D1E12] focus:ring-1 focus:ring-[#5C3A21] focus:border-[#5C3A21] transition-all text-base shadow-sm placeholder:text-[#D1C7BD] outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#8D7B68] hover:text-[#5C3A21] transition-colors focus:outline-none"
+                  >
+                    <EyeIcon open={showPassword} />
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full flex justify-center items-center gap-3 py-3.5 px-4 rounded-lg text-white font-medium text-base transition-all duration-300 active:scale-[0.98] mt-8 shadow-md hover:shadow-lg disabled:opacity-70"
+                style={{ backgroundColor: colors.primary }}
+                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = colors.primaryHover)}
+                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = colors.primary)}
+              >
+                <span>{isLoading ? "Mlebet (Memproses)..." : isAdmin ? "Masuk Panel" : "Masuk"}</span>
+                {!isLoading && <ArrowIcon />}
+              </button>
+            </form>
+
+            <div className="mt-10 pt-6 border-t border-[#E6D5C3] text-center">
+              <p className="text-[#8D7B68] text-sm">
+                Belum memiliki akses?{" "}
+                <Link href="/register" className="font-medium hover:underline" style={{ color: colors.primary }}>
+                  Daftar Sekarang
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
