@@ -105,17 +105,12 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
             const el = document.createElement('style');
             el.id = styleId;
             el.textContent = `
-                @keyframes busGimmickPulse {
-                    0%,100% { box-shadow:0 0 14px rgba(220,20,60,.75),0 3px 8px rgba(0,0,0,.35); transform:scale(1); }
-                    50%      { box-shadow:0 0 28px rgba(220,20,60,1),0 3px 10px rgba(0,0,0,.4); transform:scale(1.09); }
-                }
                 .bus-gimmick-dot {
                     display:flex; align-items:center; justify-content:center;
                     width:38px; height:38px;
                     background-color: white;
                     border-radius:50%; border:3px solid #DC143C;
-                    box-shadow:0 0 14px rgba(220,20,60,.75),0 3px 8px rgba(0,0,0,.35);
-                    animation:busGimmickPulse 1.4s ease-in-out infinite;
+                    box-shadow:0 3px 8px rgba(0,0,0,.3);
                 }
                 .bus-icon-mask {
                     width: 22px; height: 22px;
