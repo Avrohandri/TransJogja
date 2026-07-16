@@ -217,14 +217,16 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 pt-5 border-t border-[#E6D5C3] text-center">
-            <p className="text-sm text-[#8D7B68]">
-              Belum punya akun?{" "}
-              <Link href="/register" className="font-semibold hover:underline" style={{ color: colors.primary }}>
-                Daftar
-              </Link>
-            </p>
-          </div>
+          {!isAdmin && (
+            <div className="mt-8 pt-5 border-t border-[#E6D5C3] text-center">
+              <p className="text-sm text-[#8D7B68]">
+                Belum punya akun?{" "}
+                <Link href="/register" className="font-semibold hover:underline" style={{ color: colors.primary }}>
+                  Daftar
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -400,14 +402,16 @@ export default function LoginPage() {
               </button>
             </form>
 
-            <div className="mt-10 pt-6 border-t border-[#E6D5C3] text-center">
-              <p className="text-[#8D7B68] text-sm">
-                Belum memiliki akses?{" "}
-                <Link href="/register" className="font-medium hover:underline" style={{ color: colors.primary }}>
-                  Daftar Sekarang
-                </Link>
-              </p>
-            </div>
+            {!isAdmin && (
+              <div className="mt-10 pt-6 border-t border-[#E6D5C3] text-center">
+                <p className="text-[#8D7B68] text-sm">
+                  Belum memiliki akses?{" "}
+                  <Link href="/register" className="font-medium hover:underline" style={{ color: colors.primary }}>
+                    Daftar Sekarang
+                  </Link>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
