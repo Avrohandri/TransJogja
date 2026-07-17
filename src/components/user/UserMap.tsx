@@ -315,15 +315,6 @@ export default function UserMap({ isDetail = false }: { isDetail?: boolean }) {
                 })}
             </Pane>
 
-            {/* ── Bus Markers (real-time) ──────────────────────────────────── */}
-            {buses.map(bus => (
-                <Marker key={bus.busId} position={[bus.latitude, bus.longitude]} icon={busIcon}>
-                    <Popup>
-                        <strong>Bus {bus.busId}</strong><br />
-                        Kecepatan: {bus.speed} km/h
-                    </Popup>
-                </Marker>
-            ))}
 
             {/* ── Gimmick buses (Cluster 1 & 2 towards Jangkang) ─────────── */}
             {bus1Pos && (
