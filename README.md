@@ -12,9 +12,9 @@ Aplikasi berbasis web untuk mempermudah akses informasi rute, pemantauan lokasi 
 
 ## Stack Teknologi
 
-- **Frontend**: Next.js, TypeScript, Tailwind CSS
-- **Backend / Database**: Firebase
-- **Maps**: Google Maps JavaScript API
+- **Frontend**: Next.js, TypeScript, Tailwind CSS.
+- **Backend / Database**: Firebase.
+- **Maps**: Google Maps JavaScript API.
 
 ---
 *Trans Jogja - Mudah dan Efisien*
