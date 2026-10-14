@@ -17,4 +17,4 @@ Aplikasi berbasis web untuk mempermudah akses informasi rute, pemantauan lokasi 
 - **Maps**: Google Maps JavaScript API.
 
 ---
-*Trans Jogja - Mudah dan Efisien*
+*Trans Jogja - Mudah dan Terjamin*
